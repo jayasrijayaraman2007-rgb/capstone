@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><title>Hosts — Visitor Gate Pass</title></head>
+<body>
+<h1>Hosts</h1>
+<form th:action="@{/admin/hosts}" method="get">
+  <label for="q">Search by name</label>
+  <input id="q" name="q" type="search" th:value="${q}"/>
+  <button type="submit">Search</button>
+</form>
+<p><a th:href="@{/admin/hosts/new}">Add host</a></p>
+<p th:if="${#lists.isEmpty(hosts)}">No hosts found.</p>
+<table th:unless="${#lists.isEmpty(hosts)}">
+  <thead><tr><th>Name</th><th>Department</th><th>Email</th><th></th></tr></thead>
+  <tbody>
+    <tr th:each="h : ${hosts}">
+      <td th:text="${h.name}">Name</td>
+      <td th:text="${h.department}">Department</td>
+      <td th:text="${h.email}">Email</td>
+      <td><a th:href="@{/admin/hosts/{id}(id=${h.hostId})}">View</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

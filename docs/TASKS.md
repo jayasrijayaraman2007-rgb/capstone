@@ -8,7 +8,7 @@
 - [ ] T-01 Maven + Spring Boot skeleton + MySQL config (needs T-00).
 - [x] T-02 Users + auth + role-based access (needs T-00 contract). DONE 2026-09-19: User/Role entity, BCrypt, session form-login, URL role rules, env-seeded admin, 6/6 tests green, live login verified (`/dashboard` greets admin, anon redirected).
 - [x] T-03 Visitors CRUD + search (F-01, F-09). DONE 2026-09-19: Visitor entity/repo/service/controller, list+search (name/phone), register/edit with validation, detail, 404 page, role guard (Admin/Security only), 13/13 tests green, live flow verified (create→302→detail, search finds, missing→404).
-- [ ] T-04 Hosts CRUD (Admin).
+- [x] T-04 Hosts CRUD (Admin). DONE 2026-09-20: Host entity/repo/service/controller under `/admin/hosts`, list+search, add/edit with validation, detail, 404, Admin-only guard, 21/21 tests green, live flow verified (create→302→detail, missing→404).
 - [ ] T-05 Visit requests + host approve/reject (F-02…F-04).
 - [ ] T-06 Gate pass generation + status lifecycle (F-05, F-06).
 - [ ] T-07 Entry/exit recording + history (F-07, F-08, F-09).
@@ -16,4 +16,4 @@
 - [ ] T-09 UI states, validation, responsive, accessibility pass.
 - [ ] T-10 Test/build/lint hardening per TESTING.md + DoD.
 
-Next approved task: T-04 (Hosts CRUD). T-05+ remain blocked until prior task passes DoD.
+Next approved task: T-05 (Visit requests + host approve/reject). T-06+ remain blocked until prior task passes DoD.
