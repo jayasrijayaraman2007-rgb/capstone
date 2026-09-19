@@ -6,7 +6,9 @@
 <div class="shell-main">
 <div th:replace="~{fragments :: pagehead}"></div>
 <main class="container wide">
+<p class="page-eyebrow">Host command center</p>
 <h1>Visit requests</h1>
+<p class="muted" th:if="${!#lists.isEmpty(requests)}"><strong th:text="${#lists.size(requests)}">0</strong> records shown</p>
 <p class="filter-links">
   <a th:href="@{/requests}">All</a>
   <a th:href="@{/requests(status='PENDING')}">Pending</a>

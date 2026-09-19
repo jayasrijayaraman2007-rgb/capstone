@@ -1,33 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Dashboard — Visitor Gate Pass</title></head>
 <body>
 <div th:replace="~{fragments :: sidebar}"></div>
 <div class="shell-main">
 <div th:replace="~{fragments :: pagehead}"></div>
 <main class="container wide">
-<h1>Dashboard</h1>
-<p>Welcome, <span th:text="${username}">user</span>.</p>
+<div class="cmdbar card">
+  <div>
+    <p class="page-eyebrow">Campus-North // Node-01</p>
+    <h1>Good day, <span th:text="${username}">user</span></h1>
+    <p class="muted">Facility overview &amp; real-time perimeter security · All gates synchronized</p>
+  </div>
+  <div class="actions-row">
+    <a class="btn" sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')" th:href="@{/visitors/new}">＋ Add Visitor Pre-Reg</a>
+    <a class="btn btn-secondary" sec:authorize="hasRole('ADMIN')" th:href="@{/admin/hosts/new}">＋ Add Employee Host</a>
+  </div>
+</div>
 <section>
   <h2>Overview</h2>
   <div class="cards">
     <div class="card"><span class="card-value" th:text="${totalVisitors}">0</span><span class="card-label">Total visitors</span></div>
-    <div class="card"><span class="card-value" th:text="${pendingRequests}">0</span><span class="card-label">Pending requests</span></div>
+    <div class="card"><span class="card-value" th:text="${pendingRequests}">0</span><span class="card-label">Pending requests</span><span class="card-hint">Requires action</span></div>
     <div class="card"><span class="card-value" th:text="${approvedRequests}">0</span><span class="card-label">Approved requests</span></div>
-    <div class="card"><span class="card-value" th:text="${insideNow}">0</span><span class="card-label">Inside now</span></div>
+    <div class="card"><span class="card-value" th:text="${insideNow}">0</span><span class="card-label">Inside now</span><span class="card-hint">Live on campus</span></div>
     <div class="card"><span class="card-value" th:text="${completedVisits}">0</span><span class="card-label">Completed visits</span></div>
   </div>
 </section>
 <section>
-  <h2>Recent gate passes</h2>
+  <h2>Recent gate activity</h2>
   <p th:if="${#lists.isEmpty(recentPasses)}">No gate passes yet.</p>
-  <ul th:unless="${#lists.isEmpty(recentPasses)}">
-    <li th:each="p : ${recentPasses}">
-      <a th:href="@{/passes/{id}(id=${p.passId})}" th:text="${'Pass #' + p.passId}">Pass</a>
-      <span th:text="${p.visitor.name}">Visitor</span>
-      <span class="badge" th:classappend="${'b-' + #strings.toLowerCase(p.status)}" th:text="${p.status}">Status</span>
-    </li>
-  </ul>
+  <div class="table-scroll" th:unless="${#lists.isEmpty(recentPasses)}">
+  <table>
+    <thead><tr><th scope="col">Pass</th><th scope="col">Visitor</th><th scope="col">Host</th><th scope="col">Purpose</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
+    <tbody>
+      <tr th:each="p : ${recentPasses}">
+        <td class="mono" th:text="${'GP-' + p.passId}">GP-0</td>
+        <td th:text="${p.visitor.name}">Visitor</td>
+        <td th:text="${p.host.name}">Host</td>
+        <td th:text="${p.purpose}">Purpose</td>
+        <td><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(p.status)}" th:text="${p.status}">Status</span></td>
+        <td><a th:href="@{/passes/{id}(id=${p.passId})}">View</a></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
 </section>
 <section>
   <h2>Recent visit requests</h2>

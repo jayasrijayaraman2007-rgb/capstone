@@ -5,31 +5,46 @@
 <div th:replace="~{fragments :: sidebar}"></div>
 <div class="shell-main">
 <div th:replace="~{fragments :: pagehead}"></div>
-<main class="container">
-<h1>Gate pass #<span th:text="${pass.passId}">ID</span></h1>
-<dl class="card">
-  <dt>Visitor</dt><dd th:text="${pass.visitor.name}">Visitor</dd>
-  <dt>Host</dt><dd th:text="${pass.host.name}">Host</dd>
-  <dt>Purpose</dt><dd th:text="${pass.purpose}">Purpose</dd>
-  <dt>Issued</dt><dd th:text="${pass.issueDate}">Date</dd>
-  <dt>Status</dt><dd><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(pass.status)}" th:text="${pass.status}">Status</span></dd>
-  <dt>Entry time</dt><dd th:text="${movement?.entryTime}">—</dd>
-  <dt>Exit time</dt><dd th:text="${movement?.exitTime}">—</dd>
-</dl>
-<div class="alert alert-error" th:if="${param.error}">This action is not allowed in the pass's current state.</div>
-<div th:if="${pass.status.name() == 'APPROVED'}">
-  <form th:action="@{/passes/{id}/entry(id=${pass.passId})}" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <button type="submit" class="btn">Record entry</button>
-  </form>
+<main class="container wide">
+<p class="page-eyebrow">Turnstile optical credential</p>
+<div class="passwrap">
+  <section class="badgepass" aria-label="Digital gate pass">
+    <div class="badgepass-top"><span>◈ PassGuard</span><span class="mono">OFFICIAL PASS</span></div>
+    <div class="badgepass-id mono" th:text="${'GP-' + pass.passId}">GP-0</div>
+    <div class="badgepass-name" th:text="${pass.visitor.name}">Visitor</div>
+    <div class="muted" th:text="${pass.host.name}">Host</div>
+    <p><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(pass.status)}" th:text="${pass.status}">Status</span></p>
+    <dl class="badgepass-meta">
+      <div><dt>Purpose</dt><dd th:text="${pass.purpose}">Purpose</dd></div>
+      <div><dt>Issued</dt><dd th:text="${pass.issueDate}">Date</dd></div>
+      <div><dt>Entry</dt><dd th:text="${movement?.entryTime}">—</dd></div>
+      <div><dt>Exit</dt><dd th:text="${movement?.exitTime}">—</dd></div>
+    </dl>
+    <div class="hologram" aria-hidden="true"></div>
+    <div class="verified-strip">Security verified credential</div>
+  </section>
+  <section class="card">
+    <h2 style="margin-top:0">Credentialing lifecycle</h2>
+    <ol class="timeline">
+      <li class="t-done"><strong>Registration submitted</strong><span class="mono" th:text="${pass.request.requestDate}">date</span></li>
+      <li class="t-done"><strong>Host approved · pass issued</strong><span class="mono" th:text="${pass.issueDate}">date</span></li>
+      <li th:class="${movement?.entryTime != null ? 't-done' : 't-now'}"><strong>Gate entry</strong><span class="mono" th:text="${movement?.entryTime ?: 'Awaiting guest'}">—</span></li>
+      <li th:class="${movement?.exitTime != null ? 't-done' : 't-todo'}"><strong>Exit &amp; revocation</strong><span class="mono" th:text="${movement?.exitTime ?: 'Scheduled'}">—</span></li>
+    </ol>
+    <div class="alert alert-error" th:if="${param.error}">This action is not allowed in the pass's current state.</div>
+    <div class="actions-row">
+      <form th:if="${pass.status.name() == 'APPROVED'}" th:action="@{/passes/{id}/entry(id=${pass.passId})}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn">Confirm Check-In [Enter]</button>
+      </form>
+      <form th:if="${pass.status.name() == 'ACTIVE'}" th:action="@{/passes/{id}/exit(id=${pass.passId})}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" class="btn">Record exit</button>
+      </form>
+      <a th:href="@{/passes}">Back to list</a>
+    </div>
+  </section>
 </div>
-<div th:if="${pass.status.name() == 'ACTIVE'}">
-  <form th:action="@{/passes/{id}/exit(id=${pass.passId})}" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <button type="submit" class="btn">Record exit</button>
-  </form>
-</div>
-<p><a th:href="@{/passes}">Back to list</a></p>
 </main>
 <div th:replace="~{fragments :: footer}"></div>
 </div>

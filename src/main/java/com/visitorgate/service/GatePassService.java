@@ -50,4 +50,18 @@ public class GatePassService {
     }
     return passes.findByStatus(status);
   }
+
+  @Transactional(readOnly = true)
+  public long totalCount() {
+    return passes.count();
+  }
+
+  @Transactional(readOnly = true)
+  public java.util.Map<String, Long> statusCounts() {
+    java.util.Map<String, Long> counts = new java.util.LinkedHashMap<>();
+    for (PassStatus s : PassStatus.values()) {
+      counts.put(s.name(), passes.countByStatus(s));
+    }
+    return counts;
+  }
 }

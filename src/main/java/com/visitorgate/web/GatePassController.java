@@ -31,6 +31,8 @@ public class GatePassController {
     PassStatus status = parseStatus(statusParam);
     model.addAttribute("passes", passes.list(status));
     model.addAttribute("status", statusParam == null ? "" : statusParam);
+    model.addAttribute("counts", passes.statusCounts());
+    model.addAttribute("totalPasses", passes.totalCount());
     return "passes/list";
   }
 
