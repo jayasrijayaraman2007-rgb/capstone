@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><title>Visitor detail — Visitor Gate Pass</title></head>
+<body>
+<h1 th:text="${visitor.name}">Visitor</h1>
+<dl>
+  <dt>Phone</dt><dd th:text="${visitor.phone}">Phone</dd>
+  <dt>Email</dt><dd th:text="${visitor.email}">Email</dd>
+  <dt>Address</dt><dd th:text="${visitor.address}">Address</dd>
+  <dt>ID proof</dt><dd th:text="${visitor.idProof}">ID proof</dd>
+</dl>
+<p>
+  <a th:href="@{/visitors/{id}/edit(id=${visitor.visitorId})}">Edit</a>
+  <a th:href="@{/visitors}">Back to list</a>
+</p>
+</body>
+</html>

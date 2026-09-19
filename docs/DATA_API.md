@@ -18,6 +18,8 @@
 - Passwords: BCrypt-hashed only; never plaintext (replaces `AuthenticationModule.java:30` hardcoded credential).
 - Approved DDL (applied to dev DB 2026-09-19, T-02):
   `CREATE TABLE users (user_id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, username VARCHAR(50) NOT NULL UNIQUE, password VARCHAR(100) NOT NULL, role VARCHAR(20) NOT NULL) ENGINE=InnoDB;`
+- Approved DDL (applied to dev DB 2026-09-19, T-03; name/phone/id_proof required, email/address optional):
+  `CREATE TABLE visitors (visitor_id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, phone VARCHAR(20) NOT NULL, email VARCHAR(100), address VARCHAR(255), id_proof VARCHAR(100) NOT NULL) ENGINE=InnoDB;`
 
 ## 3. PROPOSED endpoint sketch (NOT approved — for planner review only)
 Proposed only to unblock discussion; names/methods/payloads must be confirmed in a planner-approved revision before coding:

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><title>Visitors — Visitor Gate Pass</title></head>
+<body>
+<h1>Visitors</h1>
+<form th:action="@{/visitors}" method="get">
+  <label for="q">Search by name or phone</label>
+  <input id="q" name="q" type="search" th:value="${q}"/>
+  <button type="submit">Search</button>
+</form>
+<p><a th:href="@{/visitors/new}">Register visitor</a></p>
+<p th:if="${#lists.isEmpty(visitors)}">No visitors found.</p>
+<table th:unless="${#lists.isEmpty(visitors)}">
+  <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th></th></tr></thead>
+  <tbody>
+    <tr th:each="v : ${visitors}">
+      <td th:text="${v.name}">Name</td>
+      <td th:text="${v.phone}">Phone</td>
+      <td th:text="${v.email}">Email</td>
+      <td><a th:href="@{/visitors/{id}(id=${v.visitorId})}">View</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
