@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><title>Request detail — Visitor Gate Pass</title></head>
+<body>
+<h1>Visit request</h1>
+<p th:if="${param.error}">This request was already decided and cannot be changed.</p>
+<dl>
+  <dt>Visitor</dt><dd th:text="${visitRequest.visitor.name}">Visitor</dd>
+  <dt>Host</dt><dd th:text="${visitRequest.host.name}">Host</dd>
+  <dt>Purpose</dt><dd th:text="${visitRequest.purpose}">Purpose</dd>
+  <dt>Requested</dt><dd th:text="${visitRequest.requestDate}">Date</dd>
+  <dt>Status</dt><dd th:text="${visitRequest.status}">Status</dd>
+</dl>
+<div th:if="${visitRequest.status.name() == 'PENDING'}">
+  <form th:action="@{/requests/{id}/approve(id=${visitRequest.requestId})}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <button type="submit">Approve</button>
+  </form>
+  <form th:action="@{/requests/{id}/reject(id=${visitRequest.requestId})}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <button type="submit">Reject</button>
+  </form>
+</div>
+<p><a th:href="@{/requests}">Back to list</a></p>
+</body>
+</html>

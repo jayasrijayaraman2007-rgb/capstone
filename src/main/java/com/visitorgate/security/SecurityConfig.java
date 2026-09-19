@@ -2,6 +2,7 @@ package com.visitorgate.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +25,8 @@ public class SecurityConfig {
             .requestMatchers("/login", "/error", "/css/**", "/api/health").permitAll()
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .requestMatchers("/visitors/**", "/passes/**", "/history").hasAnyRole("ADMIN", "SECURITY_OFFICER")
+            .requestMatchers(HttpMethod.GET, "/requests/new").hasAnyRole("ADMIN", "SECURITY_OFFICER")
+            .requestMatchers(HttpMethod.POST, "/requests").hasAnyRole("ADMIN", "SECURITY_OFFICER")
             .requestMatchers("/requests/**").hasAnyRole("HOST", "ADMIN")
             .requestMatchers("/dashboard").authenticated()
             .anyRequest().authenticated())

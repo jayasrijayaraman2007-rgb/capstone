@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><title>Visit requests — Visitor Gate Pass</title></head>
+<body>
+<h1>Visit requests</h1>
+<p>
+  <a th:href="@{/requests}">All</a>
+  <a th:href="@{/requests(status='PENDING')}">Pending</a>
+  <a th:href="@{/requests(status='APPROVED')}">Approved</a>
+  <a th:href="@{/requests(status='REJECTED')}">Rejected</a>
+</p>
+<p th:if="${#lists.isEmpty(requests)}">No visit requests found.</p>
+<table th:unless="${#lists.isEmpty(requests)}">
+  <thead><tr><th>Visitor</th><th>Host</th><th>Purpose</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+    <tr th:each="r : ${requests}">
+      <td th:text="${r.visitor.name}">Visitor</td>
+      <td th:text="${r.host.name}">Host</td>
+      <td th:text="${r.purpose}">Purpose</td>
+      <td th:text="${r.status}">Status</td>
+      <td><a th:href="@{/requests/{id}(id=${r.requestId})}">View</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

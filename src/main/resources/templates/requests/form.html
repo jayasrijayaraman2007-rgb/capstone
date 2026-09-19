@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><title>New visit request — Visitor Gate Pass</title></head>
+<body>
+<h1>New visit request</h1>
+<form th:action="@{/requests}" th:object="${requestForm}" method="post">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  <div>
+    <label for="visitorId">Visitor (required)</label>
+    <select id="visitorId" th:field="*{visitorId}">
+      <option value="">-- choose visitor --</option>
+      <option th:each="v : ${visitors}" th:value="${v.visitorId}" th:text="${v.name + ' (' + v.phone + ')'}">Visitor</option>
+    </select>
+    <span th:if="${#fields.hasErrors('visitorId')}" th:errors="*{visitorId}">Visitor error</span>
+  </div>
+  <div>
+    <label for="hostId">Host (required)</label>
+    <select id="hostId" th:field="*{hostId}">
+      <option value="">-- choose host --</option>
+      <option th:each="h : ${hosts}" th:value="${h.hostId}" th:text="${h.name + ' — ' + h.department}">Host</option>
+    </select>
+    <span th:if="${#fields.hasErrors('hostId')}" th:errors="*{hostId}">Host error</span>
+  </div>
+  <div>
+    <label for="purpose">Purpose (required)</label>
+    <input id="purpose" th:field="*{purpose}" type="text" required/>
+    <span th:if="${#fields.hasErrors('purpose')}" th:errors="*{purpose}">Purpose error</span>
+  </div>
+  <button type="submit">Submit request</button>
+  <a th:href="@{/dashboard}">Cancel</a>
+</form>
+</body>
+</html>

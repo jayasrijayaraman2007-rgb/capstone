@@ -22,6 +22,9 @@
   `CREATE TABLE visitors (visitor_id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, phone VARCHAR(20) NOT NULL, email VARCHAR(100), address VARCHAR(255), id_proof VARCHAR(100) NOT NULL) ENGINE=InnoDB;`
 - Approved DDL (applied to dev DB 2026-09-20, T-04; name/department required, phone/email optional; no delete — hosts are referenced by future requests/passes):
   `CREATE TABLE hosts (host_id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, department VARCHAR(100) NOT NULL, phone VARCHAR(20), email VARCHAR(100)) ENGINE=InnoDB;`
+- Approved DDL (applied to dev DB 2026-09-20, T-05; status ∈ {PENDING, APPROVED, REJECTED}):
+  `CREATE TABLE visit_requests (request_id BIGINT AUTO_INCREMENT PRIMARY KEY, visitor_id BIGINT NOT NULL, host_id BIGINT NOT NULL, purpose VARCHAR(255) NOT NULL, request_date DATETIME NOT NULL, status VARCHAR(20) NOT NULL, CONSTRAINT fk_vr_visitor FOREIGN KEY (visitor_id) REFERENCES visitors(visitor_id), CONSTRAINT fk_vr_host FOREIGN KEY (host_id) REFERENCES hosts(host_id)) ENGINE=InnoDB;`
+- Host scoping (T-05 interim, flagged for planner review): a HOST login sees only requests whose host.email matches the login username (case-insensitive); admin links accounts by setting host email = username. No schema change was made for this; a dedicated user↔host FK can replace it if the planner prefers.
 
 ## 3. PROPOSED endpoint sketch (NOT approved — for planner review only)
 Proposed only to unblock discussion; names/methods/payloads must be confirmed in a planner-approved revision before coding:
