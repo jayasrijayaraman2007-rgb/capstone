@@ -14,7 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,5 +60,12 @@ class AuthTest {
     mvc.perform(formLogin().user("officer1").password("wrong-pass"))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrlPattern("/login?error*"));
+  }
+
+  @Test
+  void logoutReturnsToLogin() throws Exception {
+    mvc.perform(post("/logout").with(csrf()))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrlPattern("/login?logout*"));
   }
 }

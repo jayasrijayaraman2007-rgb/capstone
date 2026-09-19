@@ -1,6 +1,7 @@
-# TESTING (DRAFT)
+# TESTING (APPROVED — suite green 2026-09-20, 43 tests)
 
-- Current: no tests exist. `AuthenticationModule.java` has no unit/integration tests.
-- Minimum when backend exists: unit (entities/services/state machine), validation tests, auth tests, authorization tests (per-role), API tests per DATA_API contract, error-handling tests, `mvn test`, build.
-- Traceability: test only approved flows F-01…F-10; do not invent flows to pad coverage.
-- Manual checklist (once UI/API exist): login, logout, protected-route denial, visitor create/retrieve, approve/reject, gate-pass generate, entry, exit, role restrictions.
+- Suite: `mvn verify` — 43 tests, 0 failures (repo, service, MockMvc controller, auth, authz per-role, validation, error/404/state-guard, logout, format check). All `@Transactional` (no dev-data pollution); `@DataJpaTest` pinned to MySQL (`Replace.NONE`, no H2).
+- Lint/format: Spotless (`removeUnusedImports`, `trimTrailingWhitespace`, `endWithNewline`) bound to `verify`; full-formatter plugins excluded — palantir/google formatters crash on JDK 26 (internal javac APIs).
+- Manual checklist verified live: login, logout (302→`?logout`, session killed), protected-route denial, visitor create/retrieve, approve/reject (+re-decision guard), gate-pass generate (idempotent), entry, exit, role restrictions, dashboard metrics, 403 page.
+- Traceability: tests cover approved flows F-01…F-10 only.
+- Legacy: `AuthenticationModule.java` console prototype has no tests (superseded, not deleted yet — see T-10 remaining).

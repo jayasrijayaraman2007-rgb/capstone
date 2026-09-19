@@ -14,6 +14,6 @@
 - [x] T-07 Entry/exit recording + history (F-07, F-08, F-09). DONE 2026-09-20: EntryExit entity (one row per pass), entry→ACTIVE / exit→COMPLETED with re-action guards, `/history` page, `UserService.deleteUser` guard for linked accounts, 39/39 tests green, live verified on pass 5 (ACTIVE→re-entry blocked→COMPLETED→history shows visit).
 - [x] T-08 Dashboard + reports (only planner-approved metrics). DONE 2026-09-20: DashboardService (total visitors, pending/approved requests, inside-now, completed + 5 recent passes/requests), dashboard template with nav, 41/41 tests green, live verified (all sections render, TOTAL_VISITORS=2 COMPLETED=1). No export reports added — none specified.
 - [x] T-09 UI states, validation, responsive, accessibility pass. DONE 2026-09-20: shared `app.css` (fluid layout, scrollable tables, 44px targets, focus-visible, contrast-safe errors), viewport meta + stylesheet on all 17 templates, `scope="col"` + labelled action headers, scroll wrappers, custom 403 + generic error pages, 42/42 tests green, live verified (403 page styled, list markup has scope/viewport/css).
-- [ ] T-10 Test/build/lint hardening per TESTING.md + DoD.
+- [x] T-10 Test/build/lint hardening per TESTING.md + DoD. DONE 2026-09-20: 43/43 tests green via `mvn verify` (jar builds, Spotless check bound to verify), logout test + live logout check, no debug leftovers, TESTING.md updated. Full DoD review in final report.
 
-Next approved task: T-10 (Test/build/lint hardening). All feature tasks T-00…T-09 DONE.
+All tasks T-00…T-10 DONE 2026-09-20. No approved tasks remain.
