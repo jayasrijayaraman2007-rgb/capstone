@@ -4,6 +4,7 @@ import com.visitorgate.domain.Host;
 import com.visitorgate.domain.RequestStatus;
 import com.visitorgate.domain.VisitRequest;
 import com.visitorgate.domain.Visitor;
+import com.visitorgate.service.GatePassService;
 import com.visitorgate.service.HostService;
 import com.visitorgate.service.VisitRequestService;
 import com.visitorgate.service.VisitorService;
@@ -30,11 +31,14 @@ public class VisitRequestController {
   private final VisitRequestService requests;
   private final VisitorService visitors;
   private final HostService hosts;
+  private final GatePassService passes;
 
-  public VisitRequestController(VisitRequestService requests, VisitorService visitors, HostService hosts) {
+  public VisitRequestController(VisitRequestService requests, VisitorService visitors,
+      HostService hosts, GatePassService passes) {
     this.requests = requests;
     this.visitors = visitors;
     this.hosts = hosts;
+    this.passes = passes;
   }
 
   private boolean isAdmin(Authentication auth) {
@@ -92,6 +96,7 @@ public class VisitRequestController {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not your request");
     }
     model.addAttribute("visitRequest", request);
+    model.addAttribute("existingPass", passes.findByRequestId(id));
     return "requests/detail";
   }
 
@@ -117,6 +122,15 @@ public class VisitRequestController {
     return "redirect:/requests/" + id;
   }
 
+  @PostMapping("/{id}/pass")
+  public String generatePass(@PathVariable Long id) {
+    try {
+      return "redirect:/passes/" + passes.generateFromRequest(id).getPassId();
+    } catch (IllegalStateException | IllegalArgumentException e) {
+      return "redirect:/requests/" + id + "?error=state";
+    }
+  }
+
   private void checkDecisionRights(Long id, Principal principal, Authentication auth) {
     VisitRequest request = requests.findById(id);
     if (request == null) {
@@ -128,8 +142,8 @@ public class VisitRequestController {
   }
 
   private boolean ownsRequest(VisitRequest request, Principal principal) {
-    return principal != null && request.getHost().getEmail() != null
-        && request.getHost().getEmail().equalsIgnoreCase(principal.getName());
+    return principal != null && request.getHost().getAccount() != null
+        && principal.getName().equals(request.getHost().getAccount().getUsername());
   }
 
   private RequestStatus parseStatus(String raw) {

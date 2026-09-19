@@ -1,9 +1,12 @@
 package com.visitorgate.web;
 
 import com.visitorgate.domain.Host;
+import com.visitorgate.domain.Role;
+import com.visitorgate.domain.User;
 import com.visitorgate.domain.VisitRequest;
 import com.visitorgate.domain.Visitor;
 import com.visitorgate.repo.HostRepository;
+import com.visitorgate.repo.UserRepository;
 import com.visitorgate.repo.VisitRequestRepository;
 import com.visitorgate.repo.VisitorRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +37,8 @@ class VisitRequestControllerTest {
   @Autowired VisitorRepository visitors;
   @Autowired HostRepository hosts;
   @Autowired VisitRequestRepository requests;
+  @Autowired UserRepository userRepo;
+  @Autowired PasswordEncoder encoder;
 
   private Visitor visitor;
   private Host host;
@@ -41,7 +47,10 @@ class VisitRequestControllerTest {
   @BeforeEach
   void setUp() {
     visitor = visitors.save(new Visitor("Flow Visitor", "9000000002", null, null, "ID-2"));
-    host = hosts.save(new Host("Flow Host", "HR", null, "flowhost@example.com"));
+    User hostUser = userRepo.save(new User("Flow Host", "flowhost-user", encoder.encode("x"), Role.HOST));
+    host = new Host("Flow Host", "HR", null, "flowhost@example.com");
+    host.setAccount(hostUser);
+    host = hosts.save(host);
     otherHost = hosts.save(new Host("Other Host", "Finance", null, "otherhost@example.com"));
   }
 
@@ -66,7 +75,7 @@ class VisitRequestControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "flowhost@example.com", roles = "HOST")
+  @WithMockUser(username = "flowhost-user", roles = "HOST")
   void hostSeesOwnRequestsAndApproves() throws Exception {
     VisitRequest r = requests.save(new VisitRequest(visitor, host, "Meeting"));
     mvc.perform(get("/requests")).andExpect(status().isOk());
@@ -80,7 +89,7 @@ class VisitRequestControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "flowhost@example.com", roles = "HOST")
+  @WithMockUser(username = "flowhost-user", roles = "HOST")
   void hostCannotSeeOthersRequests() throws Exception {
     VisitRequest r = requests.save(new VisitRequest(visitor, otherHost, "Audit"));
     mvc.perform(get("/requests/" + r.getRequestId())).andExpect(status().isForbidden());

@@ -1,9 +1,13 @@
 package com.visitorgate.web;
 
+import com.visitorgate.domain.Role;
+import com.visitorgate.domain.User;
+import com.visitorgate.repo.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class HostControllerTest {
 
   @Autowired MockMvc mvc;
+  @Autowired UserRepository userRepo;
+  @Autowired PasswordEncoder encoder;
 
   @Test
   void anonymousListRedirectsToLogin() throws Exception {
@@ -55,6 +61,18 @@ class HostControllerTest {
             .param("name", "")
             .param("department", "Security"))
         .andExpect(status().isOk());
+  }
+
+  @Test
+  @WithMockUser(roles = "ADMIN")
+  void createWithLinkedAccount() throws Exception {
+    User u = userRepo.save(new User("Linked Host", "linked-host", encoder.encode("x"), Role.HOST));
+    mvc.perform(post("/admin/hosts").with(csrf())
+            .param("name", "Linked Host")
+            .param("department", "IT")
+            .param("accountId", u.getUserId().toString()))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrlPattern("/admin/hosts/*"));
   }
 
   @Test

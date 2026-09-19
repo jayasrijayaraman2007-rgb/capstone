@@ -30,7 +30,7 @@ class AuthTest {
 
   @BeforeEach
   void setUp() {
-    users.deleteAll();
+    users.findByUsername("officer1").ifPresent(users::delete);
     users.save(new User("Security Officer", "officer1", encoder.encode("officer-pass"), Role.SECURITY_OFFICER));
   }
 

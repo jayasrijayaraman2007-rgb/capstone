@@ -25,6 +25,14 @@
     <input id="email" th:field="*{email}" type="email"/>
     <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</span>
   </div>
+  <div>
+    <label for="accountId">Linked login account (optional)</label>
+    <select id="accountId" name="accountId">
+      <option value="">-- no linked account --</option>
+      <option th:each="u : ${hostUsers}" th:value="${u.userId}" th:text="${u.username}"
+        th:selected="${accountId == u.userId.toString()}">user</option>
+    </select>
+  </div>
   <button type="submit">Save</button>
   <a th:href="@{/admin/hosts}">Cancel</a>
 </form>

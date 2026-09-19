@@ -10,10 +10,10 @@
 - [x] T-03 Visitors CRUD + search (F-01, F-09). DONE 2026-09-19: Visitor entity/repo/service/controller, list+search (name/phone), register/edit with validation, detail, 404 page, role guard (Admin/Security only), 13/13 tests green, live flow verified (create→302→detail, search finds, missing→404).
 - [x] T-04 Hosts CRUD (Admin). DONE 2026-09-20: Host entity/repo/service/controller under `/admin/hosts`, list+search, add/edit with validation, detail, 404, Admin-only guard, 21/21 tests green, live flow verified (create→302→detail, missing→404).
 - [x] T-05 Visit requests + host approve/reject (F-02…F-04). DONE 2026-09-20: VisitRequest entity/FKs, create (Security/Admin), host-scoped list/detail, approve/reject with re-decision guard, status filter, 27/27 tests green, live flow verified (admin create→302, host sees own→approve→APPROVED, re-approve→?error=state).
-- [ ] T-06 Gate pass generation + status lifecycle (F-05, F-06).
+- [x] T-06 Gate pass generation + status lifecycle (F-05, F-06). DONE 2026-09-20: GatePass entity (unique request FK + visitor/host/purpose/issue-date/status), idempotent generate-from-approved-request, pass list + status filter + detail, request detail links pass, 34/34 tests green, live verified (generate→/passes/5, repeat→same, pending blocked, host cannot reach /passes).
 - [ ] T-07 Entry/exit recording + history (F-07, F-08, F-09).
 - [ ] T-08 Dashboard + reports (only planner-approved metrics).
 - [ ] T-09 UI states, validation, responsive, accessibility pass.
 - [ ] T-10 Test/build/lint hardening per TESTING.md + DoD.
 
-Next approved task: T-06 (Gate pass generation + status lifecycle). T-07+ remain blocked until prior task passes DoD.
+Next approved task: T-07 (Entry/exit recording + history). T-08+ remain blocked until prior task passes DoD.

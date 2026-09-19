@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><title>Gate passes — Visitor Gate Pass</title></head>
+<body>
+<h1>Gate passes</h1>
+<p>
+  <a th:href="@{/passes}">All</a>
+  <a th:href="@{/passes(status='APPROVED')}">Approved</a>
+  <a th:href="@{/passes(status='ACTIVE')}">Active</a>
+  <a th:href="@{/passes(status='COMPLETED')}">Completed</a>
+</p>
+<p th:if="${#lists.isEmpty(passes)}">No gate passes found.</p>
+<table th:unless="${#lists.isEmpty(passes)}">
+  <thead><tr><th>Pass</th><th>Visitor</th><th>Host</th><th>Purpose</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+    <tr th:each="p : ${passes}">
+      <td th:text="${p.passId}">ID</td>
+      <td th:text="${p.visitor.name}">Visitor</td>
+      <td th:text="${p.host.name}">Host</td>
+      <td th:text="${p.purpose}">Purpose</td>
+      <td th:text="${p.status}">Status</td>
+      <td><a th:href="@{/passes/{id}(id=${p.passId})}">View</a></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

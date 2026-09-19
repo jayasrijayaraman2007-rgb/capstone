@@ -30,7 +30,7 @@ public class VisitRequestService {
 
   @Transactional(readOnly = true)
   public List<VisitRequest> listForHostAccount(String username, RequestStatus status) {
-    Host host = username == null ? null : hosts.findByEmailIgnoreCase(username).orElse(null);
+    Host host = username == null ? null : hosts.findByAccountUsername(username).orElse(null);
     if (host == null) {
       return List.of();
     }

@@ -1,7 +1,10 @@
 package com.visitorgate.web;
 
 import com.visitorgate.domain.Host;
+import com.visitorgate.domain.Role;
+import com.visitorgate.domain.User;
 import com.visitorgate.service.HostService;
+import com.visitorgate.repo.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -20,9 +23,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class HostController {
 
   private final HostService hosts;
+  private final UserRepository users;
 
-  public HostController(HostService hosts) {
+  public HostController(HostService hosts, UserRepository users) {
     this.hosts = hosts;
+    this.users = users;
   }
 
   @GetMapping
@@ -37,16 +42,22 @@ public class HostController {
     model.addAttribute("host", new Host("", "", null, null));
     model.addAttribute("formTitle", "Add host");
     model.addAttribute("formAction", "/admin/hosts");
+    model.addAttribute("hostUsers", users.findByRole(Role.HOST));
+    model.addAttribute("accountId", "");
     return "admin/hosts/form";
   }
 
   @PostMapping
-  public String create(@Valid @ModelAttribute("host") Host host, BindingResult binding, Model model) {
+  public String create(@Valid @ModelAttribute("host") Host host, BindingResult binding,
+      @RequestParam(value = "accountId", required = false) Long accountId, Model model) {
     if (binding.hasErrors()) {
       model.addAttribute("formTitle", "Add host");
       model.addAttribute("formAction", "/admin/hosts");
+      model.addAttribute("hostUsers", users.findByRole(Role.HOST));
+      model.addAttribute("accountId", accountId == null ? "" : accountId.toString());
       return "admin/hosts/form";
     }
+    host.setAccount(resolveAccount(accountId));
     Host saved = hosts.save(host);
     return "redirect:/admin/hosts/" + saved.getHostId();
   }
@@ -70,12 +81,15 @@ public class HostController {
     model.addAttribute("host", host);
     model.addAttribute("formTitle", "Edit host");
     model.addAttribute("formAction", "/admin/hosts/" + id + "/edit");
+    model.addAttribute("hostUsers", users.findByRole(Role.HOST));
+    model.addAttribute("accountId", host.getAccount() == null ? "" : host.getAccount().getUserId().toString());
     return "admin/hosts/form";
   }
 
   @PostMapping("/{id}/edit")
   public String update(@PathVariable Long id, @Valid @ModelAttribute("host") Host form,
-      BindingResult binding, Model model) {
+      BindingResult binding, @RequestParam(value = "accountId", required = false) Long accountId,
+      Model model) {
     Host existing = hosts.findById(id);
     if (existing == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Host not found");
@@ -83,13 +97,23 @@ public class HostController {
     if (binding.hasErrors()) {
       model.addAttribute("formTitle", "Edit host");
       model.addAttribute("formAction", "/admin/hosts/" + id + "/edit");
+      model.addAttribute("hostUsers", users.findByRole(Role.HOST));
+      model.addAttribute("accountId", accountId == null ? "" : accountId.toString());
       return "admin/hosts/form";
     }
     existing.setName(form.getName());
     existing.setDepartment(form.getDepartment());
     existing.setPhone(form.getPhone());
     existing.setEmail(form.getEmail());
+    existing.setAccount(resolveAccount(accountId));
     hosts.save(existing);
     return "redirect:/admin/hosts/" + id;
+  }
+
+  private User resolveAccount(Long accountId) {
+    if (accountId == null) {
+      return null;
+    }
+    return users.findById(accountId).orElse(null);
   }
 }

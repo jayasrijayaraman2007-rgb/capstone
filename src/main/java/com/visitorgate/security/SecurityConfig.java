@@ -27,6 +27,7 @@ public class SecurityConfig {
             .requestMatchers("/visitors/**", "/passes/**", "/history").hasAnyRole("ADMIN", "SECURITY_OFFICER")
             .requestMatchers(HttpMethod.GET, "/requests/new").hasAnyRole("ADMIN", "SECURITY_OFFICER")
             .requestMatchers(HttpMethod.POST, "/requests").hasAnyRole("ADMIN", "SECURITY_OFFICER")
+            .requestMatchers(HttpMethod.POST, "/requests/*/pass").hasAnyRole("ADMIN", "SECURITY_OFFICER")
             .requestMatchers("/requests/**").hasAnyRole("HOST", "ADMIN")
             .requestMatchers("/dashboard").authenticated()
             .anyRequest().authenticated())

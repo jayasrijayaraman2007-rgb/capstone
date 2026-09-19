@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><title>Gate pass — Visitor Gate Pass</title></head>
+<body>
+<h1>Gate pass #<span th:text="${pass.passId}">ID</span></h1>
+<dl>
+  <dt>Visitor</dt><dd th:text="${pass.visitor.name}">Visitor</dd>
+  <dt>Host</dt><dd th:text="${pass.host.name}">Host</dd>
+  <dt>Purpose</dt><dd th:text="${pass.purpose}">Purpose</dd>
+  <dt>Issued</dt><dd th:text="${pass.issueDate}">Date</dd>
+  <dt>Status</dt><dd th:text="${pass.status}">Status</dd>
+</dl>
+<p><a th:href="@{/passes}">Back to list</a></p>
+</body>
+</html>

@@ -24,7 +24,10 @@
   `CREATE TABLE hosts (host_id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, department VARCHAR(100) NOT NULL, phone VARCHAR(20), email VARCHAR(100)) ENGINE=InnoDB;`
 - Approved DDL (applied to dev DB 2026-09-20, T-05; status ∈ {PENDING, APPROVED, REJECTED}):
   `CREATE TABLE visit_requests (request_id BIGINT AUTO_INCREMENT PRIMARY KEY, visitor_id BIGINT NOT NULL, host_id BIGINT NOT NULL, purpose VARCHAR(255) NOT NULL, request_date DATETIME NOT NULL, status VARCHAR(20) NOT NULL, CONSTRAINT fk_vr_visitor FOREIGN KEY (visitor_id) REFERENCES visitors(visitor_id), CONSTRAINT fk_vr_host FOREIGN KEY (host_id) REFERENCES hosts(host_id)) ENGINE=InnoDB;`
-- Host scoping (T-05 interim, flagged for planner review): a HOST login sees only requests whose host.email matches the login username (case-insensitive); admin links accounts by setting host email = username. No schema change was made for this; a dedicated user↔host FK can replace it if the planner prefers.
+- Host↔login linking (T-06 revision — replaces T-05 email-match interim): `hosts.user_id` nullable FK → `users.user_id`; a HOST login sees requests of the host whose `user_id` is their account. Admin links accounts on the host add/edit form.
+  `ALTER TABLE hosts ADD COLUMN user_id BIGINT NULL, ADD CONSTRAINT fk_host_user FOREIGN KEY (user_id) REFERENCES users(user_id);`
+- Approved DDL (applied to dev DB 2026-09-20, T-06; one pass per request via UNIQUE request_id; T-06 addition beyond §6 recorded here):
+  `CREATE TABLE gate_passes (pass_id BIGINT AUTO_INCREMENT PRIMARY KEY, request_id BIGINT NOT NULL UNIQUE, visitor_id BIGINT NOT NULL, host_id BIGINT NOT NULL, purpose VARCHAR(255) NOT NULL, issue_date DATETIME NOT NULL, status VARCHAR(20) NOT NULL, CONSTRAINT fk_gp_request FOREIGN KEY (request_id) REFERENCES visit_requests(request_id), CONSTRAINT fk_gp_visitor FOREIGN KEY (visitor_id) REFERENCES visitors(visitor_id), CONSTRAINT fk_gp_host FOREIGN KEY (host_id) REFERENCES hosts(host_id)) ENGINE=InnoDB;`
 
 ## 3. PROPOSED endpoint sketch (NOT approved — for planner review only)
 Proposed only to unblock discussion; names/methods/payloads must be confirmed in a planner-approved revision before coding:
