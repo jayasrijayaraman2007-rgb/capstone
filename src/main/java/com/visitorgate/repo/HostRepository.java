@@ -9,4 +9,5 @@ public interface HostRepository extends JpaRepository<Host, Long> {
   List<Host> findByNameContainingIgnoreCase(String name);
   Optional<Host> findByEmailIgnoreCase(String email);
   Optional<Host> findByAccountUsername(String username);
+  List<Host> findByAccountUserId(Long userId);
 }

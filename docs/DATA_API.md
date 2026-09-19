@@ -28,6 +28,9 @@
   `ALTER TABLE hosts ADD COLUMN user_id BIGINT NULL, ADD CONSTRAINT fk_host_user FOREIGN KEY (user_id) REFERENCES users(user_id);`
 - Approved DDL (applied to dev DB 2026-09-20, T-06; one pass per request via UNIQUE request_id; T-06 addition beyond §6 recorded here):
   `CREATE TABLE gate_passes (pass_id BIGINT AUTO_INCREMENT PRIMARY KEY, request_id BIGINT NOT NULL UNIQUE, visitor_id BIGINT NOT NULL, host_id BIGINT NOT NULL, purpose VARCHAR(255) NOT NULL, issue_date DATETIME NOT NULL, status VARCHAR(20) NOT NULL, CONSTRAINT fk_gp_request FOREIGN KEY (request_id) REFERENCES visit_requests(request_id), CONSTRAINT fk_gp_visitor FOREIGN KEY (visitor_id) REFERENCES visitors(visitor_id), CONSTRAINT fk_gp_host FOREIGN KEY (host_id) REFERENCES hosts(host_id)) ENGINE=InnoDB;`
+- Approved DDL (applied to dev DB 2026-09-20, T-07; one row per pass; entry set on Active, exit on Completed):
+  `CREATE TABLE entry_exit (entry_exit_id BIGINT AUTO_INCREMENT PRIMARY KEY, pass_id BIGINT NOT NULL UNIQUE, entry_time DATETIME, exit_time DATETIME, CONSTRAINT fk_ee_pass FOREIGN KEY (pass_id) REFERENCES gate_passes(pass_id)) ENGINE=InnoDB;`
+- Deletion rule (T-07 fix): linked users (hosts.user_id) cannot be deleted — `UserService.deleteUser` throws `IllegalStateException` instead of leaking an FK error. No delete UI exists yet; the rule guards all future callers.
 
 ## 3. PROPOSED endpoint sketch (NOT approved — for planner review only)
 Proposed only to unblock discussion; names/methods/payloads must be confirmed in a planner-approved revision before coding:

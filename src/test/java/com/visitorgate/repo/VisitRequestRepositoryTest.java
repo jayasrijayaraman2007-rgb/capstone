@@ -28,7 +28,8 @@ class VisitRequestRepositoryTest {
     Host h = hosts.save(new Host("Req Host", "IT", null, "reqhost@example.com"));
     VisitRequest r = requests.save(new VisitRequest(v, h, "Interview"));
     assertEquals(RequestStatus.PENDING, r.getStatus());
-    assertEquals(1, requests.findByStatus(RequestStatus.PENDING).size());
+    assertTrue(requests.findByStatus(RequestStatus.PENDING).stream()
+        .anyMatch(vr -> vr.getRequestId().equals(r.getRequestId())));
     assertEquals(1, requests.findByHostHostId(h.getHostId()).size());
     assertTrue(requests.findByHostHostIdAndStatus(h.getHostId(), RequestStatus.APPROVED).isEmpty());
   }

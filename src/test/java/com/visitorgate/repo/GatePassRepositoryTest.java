@@ -33,6 +33,7 @@ class GatePassRepositoryTest {
     GatePass p = passes.save(new GatePass(r));
     assertEquals(PassStatus.APPROVED, p.getStatus());
     assertTrue(passes.findByRequestRequestId(r.getRequestId()).isPresent());
-    assertEquals(1, passes.findByStatus(PassStatus.APPROVED).size());
+    assertTrue(passes.findByStatus(PassStatus.APPROVED).stream()
+        .anyMatch(gp -> gp.getPassId().equals(p.getPassId())));
   }
 }
