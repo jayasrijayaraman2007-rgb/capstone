@@ -4,4 +4,4 @@
 - Lint/format: Spotless (`removeUnusedImports`, `trimTrailingWhitespace`, `endWithNewline`) bound to `verify`; full-formatter plugins excluded — palantir/google formatters crash on JDK 26 (internal javac APIs).
 - Manual checklist verified live: login, logout (302→`?logout`, session killed), protected-route denial, visitor create/retrieve, approve/reject (+re-decision guard), gate-pass generate (idempotent), entry, exit, role restrictions, dashboard metrics, 403 page.
 - Traceability: tests cover approved flows F-01…F-10 only.
-- Legacy: `AuthenticationModule.java` console prototype has no tests (superseded, not deleted yet — see T-10 remaining).
+- Legacy console prototype `AuthenticationModule.java` was deleted (superseded by Spring Security); no references remain in code.
