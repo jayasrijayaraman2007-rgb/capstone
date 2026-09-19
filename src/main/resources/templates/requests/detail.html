@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Request detail — Visitor Gate Pass</title></head>
 <body>
-<div th:replace="~{fragments :: topbar}"></div>
+<div th:replace="~{fragments :: sidebar}"></div>
+<div class="shell-main">
+<div th:replace="~{fragments :: pagehead}"></div>
 <main class="container">
 <h1>Visit request</h1>
 <div class="alert alert-error" th:if="${param.error}">This request was already decided and cannot be changed.</div>
@@ -35,5 +37,6 @@
 <p><a th:href="@{/requests}">Back to list</a></p>
 </main>
 <div th:replace="~{fragments :: footer}"></div>
+</div>
 </body>
 </html>

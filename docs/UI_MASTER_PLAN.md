@@ -13,13 +13,13 @@
 - Type: system stack, base 16px, scale 0.875 / 1 / 1.25 / 1.5 / 2rem. Radius 10px cards,
   6px inputs/buttons. Spacing 4/8/16/24/32.
 
-## 2. Shared layout (`templates/fragments.html`)
-- `topbar`: brand + role-aware nav (Visitors/Passes/History → Admin+Security;
-  Requests → all authenticated; Hosts → Admin) + username + logout.
-- `footer`: product name + capstone tag.
-- Every page: `th:replace` topbar/footer; content in `<main class="container">`
-  (`.wide` for dashboard/lists). Per-page `<head>` kept (titles vary, incl. dynamic
-  form titles) with shared viewport + stylesheet links.
+## 2. Shared shell (`templates/fragments.html` — Sovereign rail + masthead)
+- `sidebar`: 280px navy rail — PassGuard brand, live-checkpoint pill, role-aware section
+  nav (real routes only), cluster footer.
+- `pagehead`: 64px white sticky masthead — breadcrumbs, gates-active pill, functional
+  visitor search (Admin/Security), Fast Check-In button, role pill, avatar + logout.
+- Every authenticated page: sidebar + `.shell-main` wrapper + pagehead; content in
+  `<main class="container">` (`.wide` for dashboard/lists). Login stays standalone.
 
 ## 3. Components (`static/css/app.css`)
 - `.cards`/`.card`/`.card-value`/`.card-label` for dashboard metrics.
