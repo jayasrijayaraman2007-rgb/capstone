@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head><meta charset="UTF-8"/><title>Hosts — Visitor Gate Pass</title></head>
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Hosts — Visitor Gate Pass</title></head>
 <body>
 <h1>Hosts</h1>
 <form th:action="@{/admin/hosts}" method="get">
@@ -10,8 +10,9 @@
 </form>
 <p><a th:href="@{/admin/hosts/new}">Add host</a></p>
 <p th:if="${#lists.isEmpty(hosts)}">No hosts found.</p>
+<div class="table-scroll">
 <table th:unless="${#lists.isEmpty(hosts)}">
-  <thead><tr><th>Name</th><th>Department</th><th>Email</th><th></th></tr></thead>
+  <thead><tr><th scope="col">Name</th><th scope="col">Department</th><th scope="col">Email</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
   <tbody>
     <tr th:each="h : ${hosts}">
       <td th:text="${h.name}">Name</td>
@@ -21,5 +22,6 @@
     </tr>
   </tbody>
 </table>
+</div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head><meta charset="UTF-8"/><title th:text="${formTitle}">Host form</title></head>
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title th:text="${formTitle}">Host form</title></head>
 <body>
 <h1 th:text="${formTitle}">Host form</h1>
 <form th:action="${formAction}" th:object="${host}" method="post">

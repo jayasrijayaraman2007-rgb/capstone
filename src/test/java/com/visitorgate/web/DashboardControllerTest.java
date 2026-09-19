@@ -32,6 +32,11 @@ class DashboardControllerTest {
   }
 
   @Test
+  void stylesheetIsPublic() throws Exception {
+    mvc.perform(get("/css/app.css")).andExpect(status().isOk());
+  }
+
+  @Test
   @WithMockUser(roles = "ADMIN")
   void dashboardShowsApprovedMetrics() throws Exception {
     mvc.perform(get("/dashboard"))

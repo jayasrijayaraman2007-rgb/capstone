@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head><meta charset="UTF-8"/><title>Gate passes — Visitor Gate Pass</title></head>
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Gate passes — Visitor Gate Pass</title></head>
 <body>
 <h1>Gate passes</h1>
 <p>
@@ -10,8 +10,9 @@
   <a th:href="@{/passes(status='COMPLETED')}">Completed</a>
 </p>
 <p th:if="${#lists.isEmpty(passes)}">No gate passes found.</p>
+<div class="table-scroll">
 <table th:unless="${#lists.isEmpty(passes)}">
-  <thead><tr><th>Pass</th><th>Visitor</th><th>Host</th><th>Purpose</th><th>Status</th><th></th></tr></thead>
+  <thead><tr><th scope="col">Pass</th><th scope="col">Visitor</th><th scope="col">Host</th><th scope="col">Purpose</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
   <tbody>
     <tr th:each="p : ${passes}">
       <td th:text="${p.passId}">ID</td>
@@ -23,5 +24,6 @@
     </tr>
   </tbody>
 </table>
+</div>
 </body>
 </html>
