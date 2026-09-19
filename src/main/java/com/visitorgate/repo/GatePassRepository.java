@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface GatePassRepository extends JpaRepository<GatePass, Long> {
   Optional<GatePass> findByRequestRequestId(Long requestId);
   List<GatePass> findByStatus(PassStatus status);
+  long countByStatus(PassStatus status);
+  List<GatePass> findTop5ByOrderByIssueDateDesc();
 }

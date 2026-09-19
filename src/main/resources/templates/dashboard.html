@@ -4,7 +4,45 @@
 <body>
 <h1>Dashboard</h1>
 <p>Welcome, <span th:text="${username}">user</span>.</p>
-<p>Metrics land in T-08.</p>
+<nav>
+  <a th:href="@{/visitors}">Visitors</a>
+  <a th:href="@{/requests}">Visit requests</a>
+  <a th:href="@{/passes}">Gate passes</a>
+  <a th:href="@{/history}">History</a>
+  <a th:href="@{/admin/hosts}">Hosts</a>
+</nav>
+<section>
+  <h2>Overview</h2>
+  <ul>
+    <li>Total visitors: <span th:text="${totalVisitors}">0</span></li>
+    <li>Pending requests: <span th:text="${pendingRequests}">0</span></li>
+    <li>Approved requests: <span th:text="${approvedRequests}">0</span></li>
+    <li>Inside now: <span th:text="${insideNow}">0</span></li>
+    <li>Completed visits: <span th:text="${completedVisits}">0</span></li>
+  </ul>
+</section>
+<section>
+  <h2>Recent gate passes</h2>
+  <p th:if="${#lists.isEmpty(recentPasses)}">No gate passes yet.</p>
+  <ul th:unless="${#lists.isEmpty(recentPasses)}">
+    <li th:each="p : ${recentPasses}">
+      <a th:href="@{/passes/{id}(id=${p.passId})}" th:text="${'Pass #' + p.passId}">Pass</a>
+      <span th:text="${p.visitor.name}">Visitor</span> —
+      <span th:text="${p.status}">Status</span>
+    </li>
+  </ul>
+</section>
+<section>
+  <h2>Recent visit requests</h2>
+  <p th:if="${#lists.isEmpty(recentRequests)}">No visit requests yet.</p>
+  <ul th:unless="${#lists.isEmpty(recentRequests)}">
+    <li th:each="r : ${recentRequests}">
+      <a th:href="@{/requests/{id}(id=${r.requestId})}" th:text="${'Request #' + r.requestId}">Request</a>
+      <span th:text="${r.visitor.name}">Visitor</span> —
+      <span th:text="${r.status}">Status</span>
+    </li>
+  </ul>
+</section>
 <form th:action="@{/logout}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/><button type="submit">Logout</button></form>
 </body>
 </html>

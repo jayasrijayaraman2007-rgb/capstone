@@ -9,4 +9,6 @@ public interface VisitRequestRepository extends JpaRepository<VisitRequest, Long
   List<VisitRequest> findByStatus(RequestStatus status);
   List<VisitRequest> findByHostHostId(Long hostId);
   List<VisitRequest> findByHostHostIdAndStatus(Long hostId, RequestStatus status);
+  long countByStatus(RequestStatus status);
+  List<VisitRequest> findTop5ByOrderByRequestDateDesc();
 }

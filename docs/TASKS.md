@@ -12,8 +12,8 @@
 - [x] T-05 Visit requests + host approve/reject (F-02…F-04). DONE 2026-09-20: VisitRequest entity/FKs, create (Security/Admin), host-scoped list/detail, approve/reject with re-decision guard, status filter, 27/27 tests green, live flow verified (admin create→302, host sees own→approve→APPROVED, re-approve→?error=state).
 - [x] T-06 Gate pass generation + status lifecycle (F-05, F-06). DONE 2026-09-20: GatePass entity (unique request FK + visitor/host/purpose/issue-date/status), idempotent generate-from-approved-request, pass list + status filter + detail, request detail links pass, 34/34 tests green, live verified (generate→/passes/5, repeat→same, pending blocked, host cannot reach /passes).
 - [x] T-07 Entry/exit recording + history (F-07, F-08, F-09). DONE 2026-09-20: EntryExit entity (one row per pass), entry→ACTIVE / exit→COMPLETED with re-action guards, `/history` page, `UserService.deleteUser` guard for linked accounts, 39/39 tests green, live verified on pass 5 (ACTIVE→re-entry blocked→COMPLETED→history shows visit).
-- [ ] T-08 Dashboard + reports (only planner-approved metrics).
+- [x] T-08 Dashboard + reports (only planner-approved metrics). DONE 2026-09-20: DashboardService (total visitors, pending/approved requests, inside-now, completed + 5 recent passes/requests), dashboard template with nav, 41/41 tests green, live verified (all sections render, TOTAL_VISITORS=2 COMPLETED=1). No export reports added — none specified.
 - [ ] T-09 UI states, validation, responsive, accessibility pass.
 - [ ] T-10 Test/build/lint hardening per TESTING.md + DoD.
 
-Next approved task: T-08 (Dashboard + reports). T-09+ remain blocked until prior task passes DoD.
+Next approved task: T-09 (UI states, validation, responsive, accessibility pass). T-10 remains blocked until prior task passes DoD.
