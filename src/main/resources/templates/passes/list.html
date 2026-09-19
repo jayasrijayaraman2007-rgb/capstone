@@ -2,16 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Gate passes — Visitor Gate Pass</title></head>
 <body>
+<div th:replace="~{fragments :: topbar}"></div>
+<main class="container wide">
 <h1>Gate passes</h1>
-<p>
+<p class="filter-links">
   <a th:href="@{/passes}">All</a>
   <a th:href="@{/passes(status='APPROVED')}">Approved</a>
   <a th:href="@{/passes(status='ACTIVE')}">Active</a>
   <a th:href="@{/passes(status='COMPLETED')}">Completed</a>
 </p>
 <p th:if="${#lists.isEmpty(passes)}">No gate passes found.</p>
-<div class="table-scroll">
-<table th:unless="${#lists.isEmpty(passes)}">
+<div class="table-scroll" th:unless="${#lists.isEmpty(passes)}">
+<table>
   <thead><tr><th scope="col">Pass</th><th scope="col">Visitor</th><th scope="col">Host</th><th scope="col">Purpose</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
   <tbody>
     <tr th:each="p : ${passes}">
@@ -19,11 +21,13 @@
       <td th:text="${p.visitor.name}">Visitor</td>
       <td th:text="${p.host.name}">Host</td>
       <td th:text="${p.purpose}">Purpose</td>
-      <td th:text="${p.status}">Status</td>
+      <td><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(p.status)}" th:text="${p.status}">Status</span></td>
       <td><a th:href="@{/passes/{id}(id=${p.passId})}">View</a></td>
     </tr>
   </tbody>
 </table>
 </div>
+</main>
+<div th:replace="~{fragments :: footer}"></div>
 </body>
 </html>

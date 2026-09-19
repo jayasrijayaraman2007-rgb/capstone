@@ -2,10 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Visit history — Visitor Gate Pass</title></head>
 <body>
+<div th:replace="~{fragments :: topbar}"></div>
+<main class="container wide">
 <h1>Visit history</h1>
 <p th:if="${#lists.isEmpty(records)}">No entry or exit records yet.</p>
-<div class="table-scroll">
-<table th:unless="${#lists.isEmpty(records)}">
+<div class="table-scroll" th:unless="${#lists.isEmpty(records)}">
+<table>
   <thead><tr><th scope="col">Pass</th><th scope="col">Visitor</th><th scope="col">Host</th><th scope="col">Entry</th><th scope="col">Exit</th><th scope="col">Status</th></tr></thead>
   <tbody>
     <tr th:each="r : ${records}">
@@ -14,10 +16,12 @@
       <td th:text="${r.pass.host.name}">Host</td>
       <td th:text="${r.entryTime}">Entry</td>
       <td th:text="${r.exitTime}">Exit</td>
-      <td th:text="${r.pass.status}">Status</td>
+      <td><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(r.pass.status)}" th:text="${r.pass.status}">Status</span></td>
     </tr>
   </tbody>
 </table>
 </div>
+</main>
+<div th:replace="~{fragments :: footer}"></div>
 </body>
 </html>

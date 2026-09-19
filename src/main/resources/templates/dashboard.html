@@ -2,24 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Dashboard — Visitor Gate Pass</title></head>
 <body>
+<div th:replace="~{fragments :: topbar}"></div>
+<main class="container wide">
 <h1>Dashboard</h1>
 <p>Welcome, <span th:text="${username}">user</span>.</p>
-<nav>
-  <a th:href="@{/visitors}">Visitors</a>
-  <a th:href="@{/requests}">Visit requests</a>
-  <a th:href="@{/passes}">Gate passes</a>
-  <a th:href="@{/history}">History</a>
-  <a th:href="@{/admin/hosts}">Hosts</a>
-</nav>
 <section>
   <h2>Overview</h2>
-  <ul>
-    <li>Total visitors: <span th:text="${totalVisitors}">0</span></li>
-    <li>Pending requests: <span th:text="${pendingRequests}">0</span></li>
-    <li>Approved requests: <span th:text="${approvedRequests}">0</span></li>
-    <li>Inside now: <span th:text="${insideNow}">0</span></li>
-    <li>Completed visits: <span th:text="${completedVisits}">0</span></li>
-  </ul>
+  <div class="cards">
+    <div class="card"><span class="card-value" th:text="${totalVisitors}">0</span><span class="card-label">Total visitors</span></div>
+    <div class="card"><span class="card-value" th:text="${pendingRequests}">0</span><span class="card-label">Pending requests</span></div>
+    <div class="card"><span class="card-value" th:text="${approvedRequests}">0</span><span class="card-label">Approved requests</span></div>
+    <div class="card"><span class="card-value" th:text="${insideNow}">0</span><span class="card-label">Inside now</span></div>
+    <div class="card"><span class="card-value" th:text="${completedVisits}">0</span><span class="card-label">Completed visits</span></div>
+  </div>
 </section>
 <section>
   <h2>Recent gate passes</h2>
@@ -27,8 +22,8 @@
   <ul th:unless="${#lists.isEmpty(recentPasses)}">
     <li th:each="p : ${recentPasses}">
       <a th:href="@{/passes/{id}(id=${p.passId})}" th:text="${'Pass #' + p.passId}">Pass</a>
-      <span th:text="${p.visitor.name}">Visitor</span> —
-      <span th:text="${p.status}">Status</span>
+      <span th:text="${p.visitor.name}">Visitor</span>
+      <span class="badge" th:classappend="${'b-' + #strings.toLowerCase(p.status)}" th:text="${p.status}">Status</span>
     </li>
   </ul>
 </section>
@@ -38,11 +33,12 @@
   <ul th:unless="${#lists.isEmpty(recentRequests)}">
     <li th:each="r : ${recentRequests}">
       <a th:href="@{/requests/{id}(id=${r.requestId})}" th:text="${'Request #' + r.requestId}">Request</a>
-      <span th:text="${r.visitor.name}">Visitor</span> —
-      <span th:text="${r.status}">Status</span>
+      <span th:text="${r.visitor.name}">Visitor</span>
+      <span class="badge" th:classappend="${'b-' + #strings.toLowerCase(r.status)}" th:text="${r.status}">Status</span>
     </li>
   </ul>
 </section>
-<form th:action="@{/logout}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/><button type="submit">Logout</button></form>
+</main>
+<div th:replace="~{fragments :: footer}"></div>
 </body>
 </html>

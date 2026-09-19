@@ -2,29 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Gate pass — Visitor Gate Pass</title></head>
 <body>
+<div th:replace="~{fragments :: topbar}"></div>
+<main class="container">
 <h1>Gate pass #<span th:text="${pass.passId}">ID</span></h1>
-<dl>
+<dl class="card">
   <dt>Visitor</dt><dd th:text="${pass.visitor.name}">Visitor</dd>
   <dt>Host</dt><dd th:text="${pass.host.name}">Host</dd>
   <dt>Purpose</dt><dd th:text="${pass.purpose}">Purpose</dd>
   <dt>Issued</dt><dd th:text="${pass.issueDate}">Date</dd>
-  <dt>Status</dt><dd th:text="${pass.status}">Status</dd>
+  <dt>Status</dt><dd><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(pass.status)}" th:text="${pass.status}">Status</span></dd>
   <dt>Entry time</dt><dd th:text="${movement?.entryTime}">—</dd>
   <dt>Exit time</dt><dd th:text="${movement?.exitTime}">—</dd>
 </dl>
-<p th:if="${param.error}">This action is not allowed in the pass's current state.</p>
+<div class="alert alert-error" th:if="${param.error}">This action is not allowed in the pass's current state.</div>
 <div th:if="${pass.status.name() == 'APPROVED'}">
   <form th:action="@{/passes/{id}/entry(id=${pass.passId})}" method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <button type="submit">Record entry</button>
+    <button type="submit" class="btn">Record entry</button>
   </form>
 </div>
 <div th:if="${pass.status.name() == 'ACTIVE'}">
   <form th:action="@{/passes/{id}/exit(id=${pass.passId})}" method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <button type="submit">Record exit</button>
+    <button type="submit" class="btn">Record exit</button>
   </form>
 </div>
 <p><a th:href="@{/passes}">Back to list</a></p>
+</main>
+<div th:replace="~{fragments :: footer}"></div>
 </body>
 </html>

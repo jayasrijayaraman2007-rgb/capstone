@@ -2,7 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title th:text="${formTitle}">Visitor form</title></head>
 <body>
+<div th:replace="~{fragments :: topbar}"></div>
+<main class="container">
 <h1 th:text="${formTitle}">Visitor form</h1>
+<div class="card">
 <form th:action="${formAction}" th:object="${visitor}" method="post">
   <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
   <div>
@@ -30,8 +33,11 @@
     <input id="idProof" th:field="*{idProof}" type="text" required/>
     <span th:if="${#fields.hasErrors('idProof')}" th:errors="*{idProof}">ID proof error</span>
   </div>
-  <button type="submit">Save</button>
+  <button type="submit" class="btn">Save</button>
   <a th:href="@{/visitors}">Cancel</a>
 </form>
+</div>
+</main>
+<div th:replace="~{fragments :: footer}"></div>
 </body>
 </html>
