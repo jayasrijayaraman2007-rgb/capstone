@@ -34,6 +34,15 @@
 - Forms/details: card wrapper; error alert box in addition to field errors.
 - Login: centered card. 403/404/error: centered card.
 
+## 6. Inspo + ui-ux-pro study (2026-09-20, applied as polish only)
+- `inspo.recommend` + `search_screens`: evidence backs grotesk-sans display + Inter body
+  (already our pairing — also used by digitalocean-com); table guidance = thin rules,
+  no zebra, hover tracking (already conform); landing-page heroes not applicable to this app.
+- `ui-ux-pro.get_design_system`: adopted hover micro-interactions (button lift+shadow,
+  card lift, row track bar); skipped back-to-top (short pages, no-JS policy), marketing
+  footer/pricing patterns (not applicable), viridis palette (brand stays Sovereign).
+- Applied: semantic KPI top-accents, button/card/row hover physics, rail link transitions.
+
 ## 5. Verification
 - `mvn verify` green (content assertions keep their text).
 - Live: login → dashboard cards render; one list, one form, 403 page; visual check via browser.

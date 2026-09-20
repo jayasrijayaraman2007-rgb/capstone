@@ -58,6 +58,8 @@ body { display: flex; min-height: 100vh; }
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
   font-size: 0.9375rem;
+  position: relative;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 .rail nav a:hover { background: #1e293b; color: #fff; }
 .rail-foot { padding: 1rem 1.25rem; border-top: 1px solid #1e293b; font-size: 0.8125rem; color: #64748b; }
@@ -132,7 +134,12 @@ body { display: flex; min-height: 100vh; }
   box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
 }
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-.cards .card { margin-bottom: 0; }
+.cards .card { margin-bottom: 0; border-top-width: 3px; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.cards .card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1); }
+.k-slate { border-top-color: #475569; }
+.k-warn { border-top-color: #d97706; }
+.k-info { border-top-color: #2563eb; }
+.k-ok { border-top-color: #16a34a; }
 .card-value { display: block; font-size: 2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .card-label { color: #64748b; }
 .auth-card { max-width: 24rem; margin: 4rem auto; }
@@ -149,7 +156,9 @@ thead th {
   color: #64748b;
   white-space: nowrap;
 }
+tbody tr { transition: background 0.15s ease; }
 tbody tr:hover { background: #f8fafc; }
+tbody tr:hover td:first-child { box-shadow: inset 3px 0 0 #2563eb; }
 tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 .badge {
   display: inline-flex;
@@ -204,7 +213,8 @@ input:focus, select:focus { outline: 2px solid #2563eb; outline-offset: 1px; bor
   text-decoration: none;
   font-weight: 600;
 }
-.btn:hover { background: #1d4ed8; }
+.btn:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18); }
+.btn:active { transform: translateY(0); box-shadow: none; }
 .btn:active { transform: scale(0.99); }
 .btn-danger { border-color: #dc2626; background: #dc2626; }
 .btn-danger:hover { background: #b91c1c; }
