@@ -18,12 +18,13 @@
 <p th:if="${#lists.isEmpty(requests)}">No visit requests found.</p>
 <div class="table-scroll" th:unless="${#lists.isEmpty(requests)}">
 <table>
-  <thead><tr><th scope="col">Visitor</th><th scope="col">Host</th><th scope="col">Purpose</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
+  <thead><tr><th scope="col">Visitor</th><th scope="col">Host</th><th scope="col">Purpose</th><th scope="col">Date</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
   <tbody>
     <tr th:each="r : ${requests}">
       <td th:text="${r.visitor.name}">Visitor</td>
       <td th:text="${r.host.name}">Host</td>
       <td th:text="${r.purpose}">Purpose</td>
+      <td th:text="${#temporals.format(r.requestDate, 'yyyy-MM-dd HH:mm')}">Date</td>
       <td><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(r.status)}" th:text="${r.status}">Status</span></td>
       <td><a th:href="@{/requests/{id}(id=${r.requestId})}">View</a></td>
     </tr>

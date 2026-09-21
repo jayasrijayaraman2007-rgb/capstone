@@ -1,7 +1,11 @@
 package com.visitorgate.web;
 
+import com.visitorgate.domain.PassStatus;
+import com.visitorgate.domain.RequestStatus;
 import com.visitorgate.service.DashboardService;
 import com.visitorgate.service.DashboardService.DashboardStats;
+import com.visitorgate.service.GatePassService;
+import com.visitorgate.service.VisitRequestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +17,14 @@ import java.security.Principal;
 public class HomeController {
 
   private final DashboardService dashboard;
+  private final GatePassService passes;
+  private final VisitRequestService requests;
 
-  public HomeController(DashboardService dashboard) {
+  public HomeController(DashboardService dashboard, GatePassService passes,
+      VisitRequestService requests) {
     this.dashboard = dashboard;
+    this.passes = passes;
+    this.requests = requests;
   }
 
   @GetMapping("/api/health")
@@ -40,6 +49,14 @@ public class HomeController {
     model.addAttribute("completedVisits", stats.completedVisits());
     model.addAttribute("recentPasses", stats.recentPasses());
     model.addAttribute("recentRequests", stats.recentRequests());
+    model.addAttribute("insidePasses", passes.list(PassStatus.ACTIVE));
+    String username = principal == null ? "" : principal.getName();
+    model.addAttribute("myPending",
+        requests.listForHostAccount(username, RequestStatus.PENDING).size());
+    model.addAttribute("myApproved",
+        requests.listForHostAccount(username, RequestStatus.APPROVED).size());
+    model.addAttribute("myRejected",
+        requests.listForHostAccount(username, RequestStatus.REJECTED).size());
     return "dashboard";
   }
 }

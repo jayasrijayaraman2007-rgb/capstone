@@ -5,6 +5,7 @@ import com.visitorgate.domain.PassStatus;
 import com.visitorgate.domain.RequestStatus;
 import com.visitorgate.domain.VisitRequest;
 import com.visitorgate.repo.GatePassRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +55,15 @@ public class GatePassService {
   @Transactional(readOnly = true)
   public long totalCount() {
     return passes.count();
+  }
+
+  @Transactional(readOnly = true)
+  public List<GatePass> passesForHost(String username, VisitRequestService requests) {
+    List<GatePass> result = new ArrayList<>();
+    for (VisitRequest r : requests.listForHostAccount(username, null)) {
+      passes.findByRequestRequestId(r.getRequestId()).ifPresent(result::add);
+    }
+    return result;
   }
 
   @Transactional(readOnly = true)

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title th:text="${isEdit ? 'Edit User' : 'Create ' + roleTitle}">Account form</title></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<div class="shell-main">
+<div th:replace="~{fragments :: pagehead}"></div>
+<main class="container">
+<p class="page-eyebrow">Administration</p>
+<h1 th:text="${isEdit ? 'Edit User' : 'Create ' + roleTitle + ' Account'}">Account</h1>
+<div class="card">
+<div class="alert alert-error" th:if="${#fields.hasGlobalErrors()}" th:each="e : ${#fields.globalErrors()}" th:text="${e}">Error</div>
+<form th:action="${formAction}" th:object="${accountForm}" method="post">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  <input type="hidden" th:field="*{role}"/>
+  <div>
+    <label for="name">Full Name (required)</label>
+    <input id="name" th:field="*{name}" type="text" required/>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</span>
+  </div>
+  <div>
+    <label for="employeeId">Employee ID (required)</label>
+    <input id="employeeId" th:field="*{employeeId}" type="text" required/>
+    <span th:if="${#fields.hasErrors('employeeId')}" th:errors="*{employeeId}">Employee ID error</span>
+  </div>
+  <div>
+    <label for="email">Email (required)</label>
+    <input id="email" th:field="*{email}" type="email" required/>
+    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</span>
+  </div>
+  <div>
+    <label for="phone">Phone</label>
+    <input id="phone" th:field="*{phone}" type="tel"/>
+    <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone error</span>
+  </div>
+  <div>
+    <label for="department">Department</label>
+    <input id="department" th:field="*{department}" type="text"/>
+    <span th:if="${#fields.hasErrors('department')}" th:errors="*{department}">Department error</span>
+  </div>
+  <div>
+    <label for="designation">Designation</label>
+    <input id="designation" th:field="*{designation}" type="text"/>
+    <span th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}">Designation error</span>
+  </div>
+  <div>
+    <label for="username">Username (required)</label>
+    <input id="username" th:field="*{username}" type="text" required th:readonly="${isEdit}"/>
+    <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span>
+  </div>
+  <div th:unless="${isEdit}">
+    <label for="password">Password (required, min 8 characters)</label>
+    <input id="password" th:field="*{password}" type="password" autocomplete="new-password" required/>
+    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span>
+  </div>
+  <div th:unless="${isEdit}">
+    <label for="confirmPassword">Confirm Password (required)</label>
+    <input id="confirmPassword" th:field="*{confirmPassword}" type="password" autocomplete="new-password" required/>
+    <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Confirm error</span>
+  </div>
+  <div th:unless="${isEdit}">
+    <label for="status">Account Status</label>
+    <select id="status" th:field="*{status}">
+      <option value="ACTIVE">Active</option>
+      <option value="INACTIVE">Inactive</option>
+    </select>
+  </div>
+  <button type="submit" class="btn">Save</button>
+  <a th:href="@{/admin/users}">Cancel</a>
+</form>
+</div>
+</main>
+<div th:replace="~{fragments :: footer}"></div>
+</div>
+</body>
+</html>

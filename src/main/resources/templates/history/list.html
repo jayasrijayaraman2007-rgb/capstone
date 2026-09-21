@@ -6,7 +6,20 @@
 <div class="shell-main">
 <div th:replace="~{fragments :: pagehead}"></div>
 <main class="container wide">
+<p class="page-eyebrow">Audit trail</p>
 <h1>Visit history</h1>
+<form th:action="@{/history}" method="get">
+  <label for="hq">Search visitor, phone, host, or pass</label>
+  <input id="hq" name="q" type="search" th:value="${q}"/>
+  <label for="hstatus">Status</label>
+  <select id="hstatus" name="status">
+    <option value="">All statuses</option>
+    <option value="APPROVED" th:selected="${status == 'APPROVED'}">Approved</option>
+    <option value="ACTIVE" th:selected="${status == 'ACTIVE'}">Active</option>
+    <option value="COMPLETED" th:selected="${status == 'COMPLETED'}">Completed</option>
+  </select>
+  <button type="submit" class="btn">Search</button>
+</form>
 <p th:if="${#lists.isEmpty(records)}">No entry or exit records yet.</p>
 <div class="table-scroll" th:unless="${#lists.isEmpty(records)}">
 <table>

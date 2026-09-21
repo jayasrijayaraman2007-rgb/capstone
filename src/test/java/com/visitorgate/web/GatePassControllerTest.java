@@ -76,8 +76,9 @@ class GatePassControllerTest {
 
   @Test
   @WithMockUser(roles = "HOST")
-  void hostCannotAccessPasses() throws Exception {
-    mvc.perform(get("/passes")).andExpect(status().isForbidden());
+  void hostSeesOnlyOwnPasses() throws Exception {
+    mvc.perform(get("/passes")).andExpect(status().isOk());
+    mvc.perform(get("/passes/999999")).andExpect(status().isNotFound());
   }
 
   @Test

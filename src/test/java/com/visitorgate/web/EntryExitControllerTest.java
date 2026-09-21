@@ -79,9 +79,9 @@ class EntryExitControllerTest {
 
   @Test
   @WithMockUser(roles = "HOST")
-  void hostCannotRecordMovementsOrHistory() throws Exception {
+  void hostCannotRecordMovementsButSeesOwnHistory() throws Exception {
     mvc.perform(post("/passes/" + approvedPassId + "/entry").with(csrf()))
         .andExpect(status().isForbidden());
-    mvc.perform(get("/history")).andExpect(status().isForbidden());
+    mvc.perform(get("/history")).andExpect(status().isOk());
   }
 }

@@ -17,3 +17,7 @@
 - [x] T-10 Test/build/lint hardening per TESTING.md + DoD. DONE 2026-09-20: 43/43 tests green via `mvn verify` (jar builds, Spotless check bound to verify), logout test + live logout check, no debug leftovers, TESTING.md updated. Full DoD review in final report.
 
 All tasks T-00…T-10 DONE 2026-09-20. No approved tasks remain.
+
+## Follow-up phase (Project 126 brief, DONE 2026-09-21)
+- [x] T-11 Admin Create Account: User extended (employee_id/email/phone/department/designation/status/created_at, ALTER recorded above), UserService.create/update/activate/deactivate (+self-guard, +ADMIN-create block, min-8 password), UserController `/admin/users/**` (list, role cards, create/edit/detail, activate/deactivate with confirm dialogs, friendly uniqueness errors), deactivated logins rejected, 56/56 tests green, live verified (create host+security, duplicates, self-guard, login as both).
+- [x] T-12 Sovereign redesign: new palette (#0B1220 rail, #F5F7FA canvas), sidebar (Users/Create Account/Hosts/Settings, host My-* labels), masthead (role badge kept, visitor search kept), split login with show-password, role dashboards (admin metrics, security fast actions + inside list, host tab counts), sectioned visitor form, request date column, searchable/filterable history, host-scoped passes/history (backend-enforced), /entry + /exit gate stations, read-only Settings page. Deliberately omitted (no backend): notifications bell, export CSV, emergency lock, QR/photos/wallet/SMS, rejection reasons, charts, vault/logs/analytics pages.

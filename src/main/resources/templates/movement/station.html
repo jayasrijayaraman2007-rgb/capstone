@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title th:text="${mode == 'entry' ? 'Gate Entry' : 'Gate Exit'}">Gate station</title></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<div class="shell-main">
+<div th:replace="~{fragments :: pagehead}"></div>
+<main class="container">
+<p class="page-eyebrow">Gate desk</p>
+<h1 th:text="${mode == 'entry' ? 'Gate Entry' : 'Gate Exit'}">Gate station</h1>
+<div class="card">
+<form th:action="${mode == 'entry' ? '/entry' : '/exit'}" method="get">
+  <label for="passId">Scan / enter Pass ID</label>
+  <input id="passId" name="passId" type="text" th:value="${query}" placeholder="GP-123" autocomplete="off" autofocus="autofocus"/>
+  <button type="submit" class="btn">Verify pass</button>
+</form>
+</div>
+<div class="alert alert-error" th:if="${notFound}">Pass not found or invalid.</div>
+<div class="alert alert-error" th:if="${param.error}">This action is not allowed in the pass's current state.</div>
+<div class="card" th:if="${pass != null}">
+  <p th:if="${pass.status.name() == 'APPROVED' and mode == 'entry'}"><strong>VALID PASS</strong></p>
+  <dl>
+    <dt>Visitor</dt><dd th:text="${pass.visitor.name}">Visitor</dd>
+    <dt>Host</dt><dd th:text="${pass.host.name}">Host</dd>
+    <dt>Pass ID</dt><dd class="mono" th:text="${'GP-' + pass.passId}">GP-0</dd>
+    <dt>Status</dt><dd><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(pass.status)}" th:text="${pass.status}">Status</span></dd>
+    <dt>Entry Time</dt><dd th:text="${movement?.entryTime}">—</dd>
+  </dl>
+  <form th:if="${mode == 'entry' and pass.status.name() == 'APPROVED'}" th:action="@{/entry/{id}(id=${pass.passId})}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <button type="submit" class="btn">Record entry</button>
+  </form>
+  <form th:if="${mode == 'exit' and pass.status.name() == 'ACTIVE'}" th:action="@{/exit/{id}(id=${pass.passId})}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <button type="submit" class="btn">Record exit</button>
+  </form>
+  <div class="alert" th:if="${mode == 'entry' and pass.status.name() == 'ACTIVE'}">🟢 Visitor inside<span th:if="${movement?.entryTime != null}"> since <span th:text="${movement.entryTime}">time</span></span>.</div>
+  <div class="alert" th:if="${mode == 'exit' and pass.status.name() == 'COMPLETED'}">✓ Visit completed<span th:if="${movement?.exitTime != null}"> at <span th:text="${movement.exitTime}">time</span></span>.</div>
+</div>
+</main>
+<div th:replace="~{fragments :: footer}"></div>
+</div>
+</body>
+</html>

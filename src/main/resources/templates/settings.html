@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Settings — Visitor Gate Pass</title></head>
+<body>
+<div th:replace="~{fragments :: sidebar}"></div>
+<div class="shell-main">
+<div th:replace="~{fragments :: pagehead}"></div>
+<main class="container">
+<p class="page-eyebrow">System</p>
+<h1>Settings</h1>
+<dl class="card">
+  <dt>Application</dt><dd th:text="${appName}">App</dd>
+  <dt>Java runtime</dt><dd class="mono" th:text="${javaVersion}">version</dd>
+  <dt>System users</dt><dd th:text="${userCount}">0</dd>
+  <dt>Visitors</dt><dd th:text="${visitorCount}">0</dd>
+  <dt>Visit requests</dt><dd th:text="${requestCount}">0</dd>
+  <dt>Gate passes</dt><dd th:text="${passCount}">0</dd>
+</dl>
+</main>
+<div th:replace="~{fragments :: footer}"></div>
+</div>
+</body>
+</html>

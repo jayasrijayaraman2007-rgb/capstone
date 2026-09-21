@@ -18,6 +18,8 @@
 - Passwords: BCrypt-hashed only; never plaintext (replaces `AuthenticationModule.java:30` hardcoded credential).
 - Approved DDL (applied to dev DB 2026-09-19, T-02):
   `CREATE TABLE users (user_id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, username VARCHAR(50) NOT NULL UNIQUE, password VARCHAR(100) NOT NULL, role VARCHAR(20) NOT NULL) ENGINE=InnoDB;`
+- Approved ALTER (applied to dev DB, Admin-Accounts phase; reuses `users`, no new user table; existing rows default ACTIVE):
+  `ALTER TABLE users ADD COLUMN employee_id VARCHAR(50) NULL UNIQUE, ADD COLUMN email VARCHAR(100) NULL UNIQUE, ADD COLUMN phone VARCHAR(20) NULL, ADD COLUMN department VARCHAR(100) NULL, ADD COLUMN designation VARCHAR(100) NULL, ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE', ADD COLUMN created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;`
 - Approved DDL (applied to dev DB 2026-09-19, T-03; name/phone/id_proof required, email/address optional):
   `CREATE TABLE visitors (visitor_id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, phone VARCHAR(20) NOT NULL, email VARCHAR(100), address VARCHAR(255), id_proof VARCHAR(100) NOT NULL) ENGINE=InnoDB;`
 - Approved DDL (applied to dev DB 2026-09-20, T-04; name/department required, phone/email optional; no delete — hosts are referenced by future requests/passes):

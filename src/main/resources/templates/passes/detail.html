@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Gate pass — Visitor Gate Pass</title></head>
 <body>
 <div th:replace="~{fragments :: sidebar}"></div>
@@ -32,7 +32,7 @@
       <li th:class="${movement?.exitTime != null ? 't-done' : 't-todo'}"><strong>Exit &amp; revocation</strong><span class="mono" th:text="${movement?.exitTime ?: 'Scheduled'}">—</span></li>
     </ol>
     <div class="alert alert-error" th:if="${param.error}">This action is not allowed in the pass's current state.</div>
-    <div class="actions-row">
+    <div class="actions-row" sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')">
       <form th:if="${pass.status.name() == 'APPROVED'}" th:action="@{/passes/{id}/entry(id=${pass.passId})}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <button type="submit" class="btn">Confirm Check-In [Enter]</button>

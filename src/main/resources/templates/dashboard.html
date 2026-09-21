@@ -6,57 +6,102 @@
 <div class="shell-main">
 <div th:replace="~{fragments :: pagehead}"></div>
 <main class="container wide">
-<div class="cmdbar card">
-  <div>
-    <p class="page-eyebrow">Campus-North // Node-01</p>
-    <h1>Good day, <span th:text="${username}">user</span></h1>
-    <p class="muted">Facility overview &amp; real-time perimeter security · All gates synchronized</p>
+<div sec:authorize="hasRole('ADMIN')">
+  <p class="page-eyebrow">Executive overview</p>
+  <h1>Good morning, Administrator</h1>
+  <p class="muted">Here's what's happening at the gate today.</p>
+  <div class="cmdbar card">
+    <div class="actions-row">
+      <a class="btn" th:href="@{/visitors/new}">＋ Add Visitor Pre-Reg</a>
+      <a class="btn btn-secondary" th:href="@{/admin/users/new}">＋ Create Account</a>
+      <a class="btn btn-secondary" th:href="@{/admin/hosts/new}">＋ Add Employee Host</a>
+    </div>
   </div>
-  <div class="actions-row">
-    <a class="btn" sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')" th:href="@{/visitors/new}">＋ Add Visitor Pre-Reg</a>
-    <a class="btn btn-secondary" sec:authorize="hasRole('ADMIN')" th:href="@{/admin/hosts/new}">＋ Add Employee Host</a>
-  </div>
+  <section>
+    <h2>Overview</h2>
+    <div class="cards">
+      <div class="card k-slate"><span class="card-value" th:text="${totalVisitors}">0</span><span class="card-label">Total visitors</span></div>
+      <div class="card k-warn"><span class="card-value" th:text="${pendingRequests}">0</span><span class="card-label">Pending requests</span><span class="card-hint">Requires action</span></div>
+      <div class="card k-info"><span class="card-value" th:text="${approvedRequests}">0</span><span class="card-label">Approved requests</span></div>
+      <div class="card k-ok"><span class="card-value" th:text="${insideNow}">0</span><span class="card-label">Inside now</span><span class="card-hint">Live on campus</span></div>
+      <div class="card k-slate"><span class="card-value" th:text="${completedVisits}">0</span><span class="card-label">Completed visits</span></div>
+    </div>
+  </section>
+  <section>
+    <h2>Recent gate activity</h2>
+    <p th:if="${#lists.isEmpty(recentPasses)}">No gate passes yet.</p>
+    <div class="table-scroll" th:unless="${#lists.isEmpty(recentPasses)}">
+    <table>
+      <thead><tr><th scope="col">Pass</th><th scope="col">Visitor</th><th scope="col">Host</th><th scope="col">Purpose</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
+      <tbody>
+        <tr th:each="p : ${recentPasses}">
+          <td class="mono" th:text="${'GP-' + p.passId}">GP-0</td>
+          <td th:text="${p.visitor.name}">Visitor</td>
+          <td th:text="${p.host.name}">Host</td>
+          <td th:text="${p.purpose}">Purpose</td>
+          <td><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(p.status)}" th:text="${p.status}">Status</span></td>
+          <td><a th:href="@{/passes/{id}(id=${p.passId})}">View</a></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <section>
+    <h2>Recent visit requests</h2>
+    <p th:if="${#lists.isEmpty(recentRequests)}">No visit requests yet.</p>
+    <ul th:unless="${#lists.isEmpty(recentRequests)}">
+      <li th:each="r : ${recentRequests}">
+        <a th:href="@{/requests/{id}(id=${r.requestId})}" th:text="${'Request #' + r.requestId}">Request</a>
+        <span th:text="${r.visitor.name}">Visitor</span>
+        <span class="badge" th:classappend="${'b-' + #strings.toLowerCase(r.status)}" th:text="${r.status}">Status</span>
+      </li>
+    </ul>
+  </section>
 </div>
-<section>
-  <h2>Overview</h2>
-  <div class="cards">
-    <div class="card k-slate"><span class="card-value" th:text="${totalVisitors}">0</span><span class="card-label">Total visitors</span></div>
-    <div class="card k-warn"><span class="card-value" th:text="${pendingRequests}">0</span><span class="card-label">Pending requests</span><span class="card-hint">Requires action</span></div>
-    <div class="card k-info"><span class="card-value" th:text="${approvedRequests}">0</span><span class="card-label">Approved requests</span></div>
-    <div class="card k-ok"><span class="card-value" th:text="${insideNow}">0</span><span class="card-label">Inside now</span><span class="card-hint">Live on campus</span></div>
-    <div class="card k-slate"><span class="card-value" th:text="${completedVisits}">0</span><span class="card-label">Completed visits</span></div>
+<div sec:authorize="hasRole('SECURITY_OFFICER')">
+  <p class="page-eyebrow">Gate desk</p>
+  <h1>Good morning, Officer</h1>
+  <p class="muted">Fast actions first — most tasks take one or two clicks.</p>
+  <div class="actions-row">
+    <a class="btn" th:href="@{/visitors/new}">Register visitor</a>
+    <a class="btn" th:href="@{/requests/new}">Create visit request</a>
+    <a class="btn" th:href="@{/entry}">Gate entry</a>
+    <a class="btn" th:href="@{/exit}">Gate exit</a>
+    <a class="btn btn-secondary" th:href="@{/passes}">Search pass</a>
   </div>
-</section>
-<section>
-  <h2>Recent gate activity</h2>
-  <p th:if="${#lists.isEmpty(recentPasses)}">No gate passes yet.</p>
-  <div class="table-scroll" th:unless="${#lists.isEmpty(recentPasses)}">
-  <table>
-    <thead><tr><th scope="col">Pass</th><th scope="col">Visitor</th><th scope="col">Host</th><th scope="col">Purpose</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
-    <tbody>
-      <tr th:each="p : ${recentPasses}">
-        <td class="mono" th:text="${'GP-' + p.passId}">GP-0</td>
-        <td th:text="${p.visitor.name}">Visitor</td>
-        <td th:text="${p.host.name}">Host</td>
-        <td th:text="${p.purpose}">Purpose</td>
-        <td><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(p.status)}" th:text="${p.status}">Status</span></td>
-        <td><a th:href="@{/passes/{id}(id=${p.passId})}">View</a></td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
-</section>
-<section>
-  <h2>Recent visit requests</h2>
-  <p th:if="${#lists.isEmpty(recentRequests)}">No visit requests yet.</p>
-  <ul th:unless="${#lists.isEmpty(recentRequests)}">
-    <li th:each="r : ${recentRequests}">
-      <a th:href="@{/requests/{id}(id=${r.requestId})}" th:text="${'Request #' + r.requestId}">Request</a>
-      <span th:text="${r.visitor.name}">Visitor</span>
-      <span class="badge" th:classappend="${'b-' + #strings.toLowerCase(r.status)}" th:text="${r.status}">Status</span>
-    </li>
-  </ul>
-</section>
+  <section>
+    <h2>Visitors currently inside (<span th:text="${insideNow}">0</span>)</h2>
+    <p th:if="${#lists.isEmpty(insidePasses)}">Nobody inside right now.</p>
+    <div class="table-scroll" th:unless="${#lists.isEmpty(insidePasses)}">
+    <table>
+      <thead><tr><th scope="col">Pass</th><th scope="col">Visitor</th><th scope="col">Host</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
+      <tbody>
+        <tr th:each="p : ${insidePasses}">
+          <td class="mono" th:text="${'GP-' + p.passId}">GP-0</td>
+          <td th:text="${p.visitor.name}">Visitor</td>
+          <td th:text="${p.host.name}">Host</td>
+          <td><a th:href="@{/passes/{id}(id=${p.passId})}">View</a></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <section>
+    <h2>Pending requests (<span th:text="${pendingRequests}">0</span>) · Approved passes</h2>
+    <p><a th:href="@{/requests?status=PENDING}">View pending requests</a> · <a th:href="@{/passes?status=APPROVED}">View approved passes</a></p>
+  </section>
+</div>
+<div sec:authorize="hasRole('HOST')">
+  <p class="page-eyebrow">Host command center</p>
+  <h1>My Visit Requests</h1>
+  <p class="filter-links">
+    <a th:href="@{/requests}">All</a>
+    <a th:href="@{/requests(status='PENDING')}">Pending (<span th:text="${myPending}">0</span>)</a>
+    <a th:href="@{/requests(status='APPROVED')}">Approved (<span th:text="${myApproved}">0</span>)</a>
+    <a th:href="@{/requests(status='REJECTED')}">Rejected (<span th:text="${myRejected}">0</span>)</a>
+  </p>
+  <p class="muted">Decide a request to see its gate pass here. <a th:href="@{/passes}">My gate passes</a> · <a th:href="@{/history}">My history</a></p>
+</div>
 </main>
 <div th:replace="~{fragments :: footer}"></div>
 </div>

@@ -18,15 +18,23 @@
   <div class="rail-live"><span class="dot dot-ok"></span>Live Checkpoint 01</div>
   <nav sec:authorize="isAuthenticated()">
     <p class="rail-section">Dashboards</p>
-    <a th:href="@{/dashboard}">Executive Overview</a>
-    <a sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')" th:href="@{/passes}">Gate Desk Operations</a>
-    <a th:href="@{/requests}">Host / Employee Approvals</a>
-    <p class="rail-section">Visitor Management</p>
-    <a sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')" th:href="@{/requests/new}">Pre-Registration &amp; Passes</a>
-    <a sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')" th:href="@{/history}">Live Visitor Monitor</a>
-    <a sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')" th:href="@{/visitors}">Visitor Directory</a>
+    <a th:href="@{/dashboard}">Dashboard</a>
+    <p class="rail-section">Operations</p>
+    <a sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')" th:href="@{/visitors}">Visitors</a>
+    <a th:href="@{/requests}" sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')">Visit Requests</a>
+    <a th:href="@{/requests}" sec:authorize="hasRole('HOST')">My Requests</a>
+    <a sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')" th:href="@{/passes}">Gate Passes</a>
+    <a th:href="@{/passes}" sec:authorize="hasRole('HOST')">My Gate Passes</a>
+    <a sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')" th:href="@{/entry}">Gate Entry</a>
+    <a sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')" th:href="@{/exit}">Gate Exit</a>
+    <a th:href="@{/history}" sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')">History</a>
+    <a th:href="@{/history}" sec:authorize="hasRole('HOST')">My History</a>
+    <p class="rail-section" sec:authorize="hasRole('ADMIN')">Administration</p>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/users}">Users</a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/users/new}">Create Account</a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/hosts}">Hosts</a>
     <p class="rail-section">System</p>
-    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/hosts}">Hosts Directory</a>
+    <a th:href="@{/settings}">Settings</a>
   </nav>
   <div class="rail-foot" sec:authorize="isAuthenticated()">
     <span>Turnstile Cluster</span><strong>East Wing · Node #04</strong>

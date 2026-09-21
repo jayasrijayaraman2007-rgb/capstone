@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Gate passes — Visitor Gate Pass</title></head>
 <body>
 <div th:replace="~{fragments :: sidebar}"></div>
@@ -26,6 +26,7 @@
       <td th:text="${p.purpose}">Purpose</td>
       <td><span class="badge" th:classappend="${'b-' + #strings.toLowerCase(p.status)}" th:text="${p.status}">Status</span></td>
       <td>
+        <div sec:authorize="hasAnyRole('ADMIN','SECURITY_OFFICER')">
         <form th:if="${p.status.name() == 'APPROVED'}" th:action="@{/passes/{id}/entry(id=${p.passId})}" method="post">
           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
           <button type="submit" class="btn btn-micro">Fast Check-In</button>
@@ -34,6 +35,7 @@
           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
           <button type="submit" class="btn btn-micro">Check-Out</button>
         </form>
+        </div>
         <a th:href="@{/passes/{id}(id=${p.passId})}">View</a>
       </td>
     </tr>
