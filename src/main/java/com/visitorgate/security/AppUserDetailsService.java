@@ -22,6 +22,10 @@ public class AppUserDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     com.visitorgate.domain.User user = users.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("Unknown user: " + username));
+    if (user.getRole() == com.visitorgate.domain.Role.ADMIN) {
+      throw new org.springframework.security.authentication.LockedException(
+          "Admin sign-in requires email verification");
+    }
     return new org.springframework.security.core.userdetails.User(
         user.getUsername(),
         user.getPassword(),

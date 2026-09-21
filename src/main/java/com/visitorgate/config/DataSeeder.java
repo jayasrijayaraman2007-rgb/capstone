@@ -21,8 +21,15 @@ public class DataSeeder {
   @Bean
   ApplicationRunner seedAdmin(UserRepository users, PasswordEncoder encoder,
       @Value("${admin.username:admin}") String adminUsername,
-      @Value("${admin.password:}") String adminPassword) {
+      @Value("${admin.password:}") String adminPassword,
+      @Value("${admin.email:}") String adminEmail) {
     return args -> {
+      users.findByUsername(adminUsername).ifPresent(existing -> {
+        if (existing.getEmail() == null && adminEmail != null && !adminEmail.isBlank()) {
+          existing.setEmail(adminEmail.trim());
+          log.info("Linked admin email for '{}'.", adminUsername);
+        }
+      });
       if (users.existsByUsername(adminUsername)) {
         return;
       }
@@ -30,7 +37,11 @@ public class DataSeeder {
         log.warn("ADMIN_PASSWORD not set — skipping default admin seed. Set ADMIN_PASSWORD env var to create '{}'.", adminUsername);
         return;
       }
-      users.save(new User("Administrator", adminUsername, encoder.encode(adminPassword), Role.ADMIN));
+      User admin = new User("Administrator", adminUsername, encoder.encode(adminPassword), Role.ADMIN);
+      if (adminEmail != null && !adminEmail.isBlank()) {
+        admin.setEmail(adminEmail.trim());
+      }
+      users.save(admin);
       log.info("Seeded default admin user '{}'.", adminUsername);
     };
   }

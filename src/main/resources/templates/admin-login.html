@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" th:href="@{/css/app.css}"/><title>Admin Login — Sovereign Gate</title></head>
+<body class="login-page">
+<main class="login-split">
+  <section class="login-brand">
+    <p class="page-eyebrow">Sovereign Gate</p>
+    <h1>Visitor Entry &amp; Gate Pass Management System</h1>
+    <ul>
+      <li>Secure.</li>
+      <li>Verified.</li>
+      <li>Traceable.</li>
+    </ul>
+    <p class="muted">Authorized personnel only. All access is logged.</p>
+  </section>
+  <section class="login-form">
+    <div class="card auth-card">
+      <h2>Admin Login</h2>
+      <div class="alert" th:if="${sent}">Verification code sent.</div>
+      <div class="alert alert-error" th:if="${mailError}">Unable to send verification code. Please try again.</div>
+      <div class="alert alert-error" th:if="${rateError}">Too many requests. Please wait a minute and try again.</div>
+      <form th:action="@{/login/admin}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div>
+          <label for="email">Email Address</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="admin@example.com" required/>
+        </div>
+        <button type="submit" class="btn btn-block">Send verification code</button>
+      </form>
+      <p><a th:href="@{/login}">Back to staff login</a></p>
+    </div>
+  </section>
+</main>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# TESTING (APPROVED — suite green 2026-09-20, 43 tests)
+# TESTING (APPROVED — suite green 2026-09-21, 71 tests)
 
 - Suite: `mvn verify` — 43 tests, 0 failures (repo, service, MockMvc controller, auth, authz per-role, validation, error/404/state-guard, logout, format check). All `@Transactional` (no dev-data pollution); `@DataJpaTest` pinned to MySQL (`Replace.NONE`, no H2).
 - Lint/format: Spotless (`removeUnusedImports`, `trimTrailingWhitespace`, `endWithNewline`) bound to `verify`; full-formatter plugins excluded — palantir/google formatters crash on JDK 26 (internal javac APIs).

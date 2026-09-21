@@ -22,7 +22,7 @@ public class SecurityConfig {
   SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/login", "/error", "/css/**", "/api/health").permitAll()
+            .requestMatchers("/login", "/login/admin", "/login/admin/**", "/error", "/css/**", "/api/health").permitAll()
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .requestMatchers("/visitors/**").hasAnyRole("ADMIN", "SECURITY_OFFICER")
             .requestMatchers("/passes/**", "/history").hasAnyRole("ADMIN", "SECURITY_OFFICER", "HOST")
