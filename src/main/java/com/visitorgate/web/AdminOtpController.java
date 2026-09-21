@@ -42,7 +42,14 @@ public class AdminOtpController {
   @PostMapping
   public String requestCode(@RequestParam(value = "email", required = false) String email,
       Model model) {
-    AdminOtpService.RequestResult result = otpService.requestCode(email);
+    AdminOtpService.RequestResult result;
+    try {
+      result = otpService.requestCode(email);
+    } catch (org.springframework.mail.MailException e) {
+      model.addAttribute("email", AdminOtpService.normalize(email));
+      model.addAttribute("mailError", true);
+      return "admin-login";
+    }
     model.addAttribute("email", AdminOtpService.normalize(email));
     return switch (result) {
       case SENT -> {

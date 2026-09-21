@@ -27,6 +27,7 @@ public class DataSeeder {
       users.findByUsername(adminUsername).ifPresent(existing -> {
         if (existing.getEmail() == null && adminEmail != null && !adminEmail.isBlank()) {
           existing.setEmail(adminEmail.trim());
+          users.save(existing);
           log.info("Linked admin email for '{}'.", adminUsername);
         }
       });
