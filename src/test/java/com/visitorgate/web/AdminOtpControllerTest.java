@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -123,11 +124,9 @@ class AdminOtpControllerTest {
   }
 
   @Test
-  void adminPasswordLoginIsBlocked() throws Exception {
-    mvc.perform(post("/login").with(csrf())
-            .param("username", "session-admin")
-            .param("password", "x"))
+  void adminPasswordLoginWorksAlongsideOtp() throws Exception {
+    mvc.perform(formLogin().user("session-admin").password("x"))
         .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrlPattern("/login?error*"));
+        .andExpect(redirectedUrlPattern("/dashboard*"));
   }
 }

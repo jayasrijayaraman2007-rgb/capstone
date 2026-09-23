@@ -35,6 +35,7 @@
     <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/hosts}">Hosts</a>
     <p class="rail-section">System</p>
     <a th:href="@{/settings}">Settings</a>
+    <a th:href="@{/account/password}">Change Password</a>
   </nav>
   <div class="rail-foot" sec:authorize="isAuthenticated()">
     <span>Turnstile Cluster</span><strong>East Wing · Node #04</strong>

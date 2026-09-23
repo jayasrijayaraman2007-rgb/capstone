@@ -48,23 +48,7 @@
     <input id="username" th:field="*{username}" type="text" required th:readonly="${isEdit}"/>
     <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</span>
   </div>
-  <div th:unless="${isEdit}">
-    <label for="password">Password (required, min 8 characters)</label>
-    <input id="password" th:field="*{password}" type="password" autocomplete="new-password" required/>
-    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span>
-  </div>
-  <div th:unless="${isEdit}">
-    <label for="confirmPassword">Confirm Password (required)</label>
-    <input id="confirmPassword" th:field="*{confirmPassword}" type="password" autocomplete="new-password" required/>
-    <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Confirm error</span>
-  </div>
-  <div th:unless="${isEdit}">
-    <label for="status">Account Status</label>
-    <select id="status" th:field="*{status}">
-      <option value="ACTIVE">Active</option>
-      <option value="INACTIVE">Inactive</option>
-    </select>
-  </div>
+  <div class="alert" th:unless="${isEdit}">The user will create their own password on the setup page. The account stays inactive until then.</div>
   <button type="submit" class="btn">Save</button>
   <a th:href="@{/admin/users}">Cancel</a>
 </form>

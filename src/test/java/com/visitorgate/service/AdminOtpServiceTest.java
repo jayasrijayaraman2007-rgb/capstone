@@ -100,7 +100,9 @@ class AdminOtpServiceTest {
     assertEquals(AdminOtpService.RequestResult.UNKNOWN, otpService.requestCode("otp-host@example.com"));
     assertEquals(AdminOtpService.RequestResult.UNKNOWN, otpService.requestCode("off-admin@example.com"));
     verify(mail, never()).sendVerificationCode(anyString(), anyString());
-    assertTrue(otps.findAll().isEmpty());
+    assertTrue(otps.findByUserUserIdOrderByCreatedAtDesc(admin.getUserId()).isEmpty());
+    assertTrue(otps.findByUserUserIdOrderByCreatedAtDesc(hostUser.getUserId()).isEmpty());
+    assertTrue(otps.findByUserUserIdOrderByCreatedAtDesc(inactiveAdmin.getUserId()).isEmpty());
   }
 
   @Test

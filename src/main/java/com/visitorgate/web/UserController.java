@@ -48,7 +48,6 @@ public class UserController {
     }
     AccountForm form = new AccountForm();
     form.setRole(role.name());
-    form.setStatus(AccountStatus.ACTIVE.name());
     model.addAttribute("accountForm", form);
     model.addAttribute("roleTitle", role == Role.HOST ? "Employee / Host" : "Security Officer");
     model.addAttribute("formAction", "/admin/users");
@@ -63,16 +62,14 @@ public class UserController {
     if (role == null) {
       return "redirect:/admin/users/new";
     }
-    validatePasswords(form, binding, false);
     if (binding.hasErrors()) {
       refillForm(model, role);
       return "admin/users/form";
     }
     try {
-      AccountStatus status = parseStatus(form.getStatus());
       User saved = userService.createAccount(form.getName(), form.getEmployeeId(),
           form.getEmail(), form.getPhone(), form.getDepartment(), form.getDesignation(),
-          form.getUsername(), form.getPassword(), role, status);
+          form.getUsername(), role, AccountStatus.INACTIVE);
       return "redirect:/admin/users/" + saved.getUserId() + "?created";
     } catch (IllegalArgumentException e) {
       binding.reject("account", e.getMessage());
@@ -165,17 +162,6 @@ public class UserController {
     model.addAttribute("isEdit", false);
   }
 
-  private void validatePasswords(AccountForm form, BindingResult binding, boolean isEdit) {
-    if (isEdit) {
-      return;
-    }
-    if (form.getPassword() == null || form.getPassword().isBlank()) {
-      binding.rejectValue("password", "required", "Password is required");
-    } else if (!form.getPassword().equals(form.getConfirmPassword())) {
-      binding.rejectValue("confirmPassword", "mismatch", "Passwords do not match");
-    }
-  }
-
   private Role parseRole(String raw) {
     if ("host".equalsIgnoreCase(raw) || "HOST".equals(raw)) {
       return Role.HOST;
@@ -184,13 +170,6 @@ public class UserController {
       return Role.SECURITY_OFFICER;
     }
     return null;
-  }
-
-  private AccountStatus parseStatus(String raw) {
-    if ("INACTIVE".equalsIgnoreCase(raw)) {
-      return AccountStatus.INACTIVE;
-    }
-    return AccountStatus.ACTIVE;
   }
 
   public static class AccountForm {
@@ -214,9 +193,6 @@ public class UserController {
     @NotBlank(message = "Username is required")
     @Size(max = 50)
     private String username;
-    private String password;
-    private String confirmPassword;
-    private String status;
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
@@ -234,11 +210,5 @@ public class UserController {
     public void setDesignation(String designation) { this.designation = designation; }
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-    public String getConfirmPassword() { return confirmPassword; }
-    public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
   }
 }

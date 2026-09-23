@@ -22,14 +22,11 @@ public class AppUserDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     com.visitorgate.domain.User user = users.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("Unknown user: " + username));
-    if (user.getRole() == com.visitorgate.domain.Role.ADMIN) {
-      throw new org.springframework.security.authentication.LockedException(
-          "Admin sign-in requires email verification");
-    }
+    boolean passwordSet = user.getPassword() != null;
     return new org.springframework.security.core.userdetails.User(
         user.getUsername(),
-        user.getPassword(),
-        user.getStatus() == com.visitorgate.domain.AccountStatus.ACTIVE,
+        passwordSet ? user.getPassword() : "",
+        user.getStatus() == com.visitorgate.domain.AccountStatus.ACTIVE && passwordSet,
         true, true, true,
         List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())));
   }

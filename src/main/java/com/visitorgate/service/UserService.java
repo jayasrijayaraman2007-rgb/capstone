@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-  public static final int MIN_PASSWORD_LENGTH = 8;
-
   private final UserRepository users;
   private final HostRepository hosts;
   private final PasswordEncoder encoder;
@@ -37,21 +35,51 @@ public class UserService {
 
   @Transactional
   public User createAccount(String name, String employeeId, String email, String phone,
-      String department, String designation, String username, String rawPassword,
-      Role role, AccountStatus status) {
-    requireUnique(username, email, employeeId, null);
-    requirePassword(rawPassword);
+      String department, String designation, String username, Role role,
+      AccountStatus status) {
     if (role == Role.ADMIN) {
       throw new IllegalArgumentException("Admin accounts cannot be created here");
     }
-    User user = new User(name.trim(), username.trim(), encoder.encode(rawPassword), role);
+    requireUnique(username, email, employeeId, null);
+    User user = new User(name.trim(), username.trim(), null, role);
     user.setEmployeeId(blankToNull(employeeId));
     user.setEmail(blankToNull(email));
     user.setPhone(blankToNull(phone));
     user.setDepartment(blankToNull(department));
     user.setDesignation(blankToNull(designation));
-    user.setStatus(status == null ? AccountStatus.ACTIVE : status);
+    user.setStatus(status == null ? AccountStatus.INACTIVE : status);
     return users.save(user);
+  }
+
+  @Transactional
+  public User setupPassword(String username, String employeeId, String rawPassword,
+      String confirmPassword) {
+    User user = users.findByUsername(username == null ? "" : username.trim())
+        .orElseThrow(() -> new IllegalArgumentException("Account not found."));
+    if (user.getPassword() != null) {
+      throw new IllegalStateException("Password is already set. Use Change Password instead.");
+    }
+    if (user.getEmployeeId() == null || employeeId == null
+        || !user.getEmployeeId().equals(employeeId.trim())) {
+      throw new IllegalArgumentException("Employee ID does not match our records.");
+    }
+    requirePasswordPair(rawPassword, confirmPassword);
+    user.setPassword(encoder.encode(rawPassword));
+    user.setStatus(AccountStatus.ACTIVE);
+    return user;
+  }
+
+  @Transactional
+  public void changePassword(String username, String currentPassword, String rawPassword,
+      String confirmPassword) {
+    User user = users.findByUsername(username)
+        .orElseThrow(() -> new IllegalArgumentException("Account not found."));
+    if (user.getPassword() == null || !encoder.matches(
+        currentPassword == null ? "" : currentPassword, user.getPassword())) {
+      throw new IllegalArgumentException("Current password is incorrect.");
+    }
+    requirePasswordPair(rawPassword, confirmPassword);
+    user.setPassword(encoder.encode(rawPassword));
   }
 
   @Transactional
@@ -102,10 +130,12 @@ public class UserService {
     }
   }
 
-  private void requirePassword(String rawPassword) {
-    if (rawPassword == null || rawPassword.length() < MIN_PASSWORD_LENGTH) {
-      throw new IllegalArgumentException(
-          "Password must be at least " + MIN_PASSWORD_LENGTH + " characters.");
+  private void requirePasswordPair(String rawPassword, String confirmPassword) {
+    if (rawPassword == null || !PasswordPolicy.isValid(rawPassword)) {
+      throw new IllegalArgumentException(PasswordPolicy.errorMessage(rawPassword));
+    }
+    if (!rawPassword.equals(confirmPassword)) {
+      throw new IllegalArgumentException("Passwords do not match.");
     }
   }
 
