@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class PasswordPolicyTest {
 
   static Stream<String> validPasswords() {
-    return Stream.of("A1@hello", "P2#test", "X9!abcde", "A1@a", "Z9$");
+    return Stream.of("A1@hello", "P2#test", "X9!abcde", "A1@a", "Z9$a");
   }
 
   @ParameterizedTest
@@ -24,7 +24,8 @@ class PasswordPolicyTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"password", "Password", "Password1", "PASS@ABC", "pass@123",
-      "A12345678@", "", "A1@hello99", "abcdefg!", "ABCDEFG1", "Abcdef12"})
+      "A12345678@", "", "A1@hello99", "abcdefg!", "ABCDEFG1", "Abcdef12", "A1@23456",
+      "A1@BCDEF"})
   void invalidPasswordsFail(String password) {
     assertFalse(PasswordPolicy.isValid(password));
   }
@@ -37,6 +38,8 @@ class PasswordPolicyTest {
         PasswordPolicy.errorMessage("pass@123"));
     assertEquals("Password must contain at least 1 digit.",
         PasswordPolicy.errorMessage("Passwor@"));
+    assertEquals("Password must contain at least 1 lowercase letter.",
+        PasswordPolicy.errorMessage("A1@23456"));
     assertEquals("Password must contain at least 1 special character.",
         PasswordPolicy.errorMessage("Passwor1"));
   }

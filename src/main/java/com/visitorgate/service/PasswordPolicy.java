@@ -4,12 +4,13 @@ import java.util.regex.Pattern;
 
 public final class PasswordPolicy {
 
-  public static final String REGEX = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{1,8}$";
+  public static final String REGEX = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{1,8}$";
 
   private static final Pattern PATTERN = Pattern.compile(REGEX);
 
   public static final String REQUIREMENTS_TEXT =
-      "At least 1 uppercase letter, at least 1 digit, at least 1 special character, maximum 8 characters.";
+      "At least 1 uppercase letter, at least 1 lowercase letter, at least 1 digit, "
+          + "at least 1 special character, maximum 8 characters.";
 
   private PasswordPolicy() {}
 
@@ -26,6 +27,9 @@ public final class PasswordPolicy {
     }
     if (!password.chars().anyMatch(Character::isUpperCase)) {
       return "Password must contain at least 1 uppercase letter.";
+    }
+    if (!password.chars().anyMatch(Character::isLowerCase)) {
+      return "Password must contain at least 1 lowercase letter.";
     }
     if (!password.chars().anyMatch(Character::isDigit)) {
       return "Password must contain at least 1 digit.";

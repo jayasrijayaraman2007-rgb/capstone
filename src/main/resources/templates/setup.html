@@ -34,8 +34,8 @@
         <div>
           <label for="password">Password</label>
           <input id="password" th:field="*{password}" type="password" autocomplete="new-password" required
-            pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{1,8}$"
-            title="At least 1 uppercase letter, at least 1 digit, at least 1 special character, maximum 8 characters."/>
+            pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{1,8}$"
+            title="At least 1 uppercase letter, at least 1 lowercase letter, at least 1 digit, at least 1 special character, maximum 8 characters."/>
         </div>
         <div>
           <label for="confirmPassword">Confirm Password</label>
